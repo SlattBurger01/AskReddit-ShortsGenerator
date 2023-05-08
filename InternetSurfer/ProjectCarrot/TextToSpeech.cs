@@ -2,12 +2,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
 using Base = ProjectCarrot.WebScraperBase;
-using Keys = OpenQA.Selenium.Keys;
-using static System.Net.WebRequestMethods;
-using System.Text;
 
 namespace ProjectCarrot
 {
@@ -95,7 +91,7 @@ namespace ProjectCarrot
 
         private static void ReadText_Pyttsx3(string text, string fileName)
         {
-            string r = PythonHelper.CallPythonFile("E:\\HONZA\\InsaneProgramming\\Reader\\Main.py", $"{s}{text}{s} {fileName}");
+            string r = PythonHelper.CallPythonFile(Paths.customReaderPath, $"{s}{text}{s} {fileName}");
 
             Debug.WriteLine(r);
         }

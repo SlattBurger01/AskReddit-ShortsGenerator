@@ -2,14 +2,10 @@ from moviepy.editor import *
 import sys
 import Utils
 
-#file_name = sys.argv[0]
-
-videoIdentifier = "test_128"
-
 try:
-    videoIdentifier = sys.argv[1]
+    videoIdentifier = sys.argv[1]  # at position 0 is file name
 except:
-    pass
+    videoIdentifier = "test_128"
 
 print(f"Calling python script id = ({videoIdentifier})")
 
@@ -18,8 +14,9 @@ audio1 = AudioFileClip(f'E:\HONZA\ContentGenerator\postA.mp3')
 
 imagePosition = ("center", 500)
 
-pause = .3  # in seconds
-beforeEndPause = .3  # in seconds
+firstPause = .4  # in seconds, pause between title and first comment
+pause = .5  # in seconds, pause between audios and videos
+beforeEndPause = .4  # in seconds
 
 
 def EditVideo(commentData):
@@ -34,7 +31,7 @@ def EditVideo(commentData):
     finalAudios = [a1]
     finalVideos = [i1]
 
-    audioDuration = a1.duration + pause
+    audioDuration = a1.duration + firstPause
 
     recentAudio = None
 

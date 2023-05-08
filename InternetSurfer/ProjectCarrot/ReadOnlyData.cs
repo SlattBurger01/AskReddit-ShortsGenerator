@@ -62,7 +62,12 @@ namespace ProjectCarrot
         public static readonly string badgeLocal_3 = "div/div/div/div[2]/div[3]/div[1]/span/span[1]/span";
         public static readonly string badgeLocal_4 = "div/div/div/div[2]/div[4]/div[1]/span/span[1]/span";
 
-        public static readonly string openedPostCloseButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[1]/div/div[2]/button";
+        //public static readonly string openedPostCloseButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[1]/div/div[2]/button";
+        public static readonly string openedPostCloseButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[5]/button";
+
+        public static readonly string notLoadedComments_RetryButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/button";
+
+        public static string interestsTab = "/html/body/div[1]/div/div[2]/div[4]/div/div/div/header/div/div[2]/button";
 
         // --- NOT LOGGED IN ---
         private static readonly string posts_N = "/html/body/div[1]/div/div[2]/div[2]/div/div/div/div[2]/div[4]/div[1]/div[4]/div";
@@ -136,15 +141,18 @@ namespace ProjectCarrot
 
     public static class Paths
     {
+        private static readonly string projectPath = "E:\\HONZA\\InsaneProgramming\\ProjectCarrot";
+        private static readonly string generatedVideosPath = "E:\\HONZA\\ContentGenerator";
+
         public static readonly string addBlockPath = "C:\\Users\\Jan\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 15\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.4.1_0.crx";
 
-        public static readonly string videoEditorPath = "E:\\HONZA\\InsaneProgramming\\VideoEditor\\Main.py";
+        public static readonly string videoEditorPath = $"{projectPath}\\VideoEditor\\Main.py";
+        public static readonly string customReaderPath = $"{projectPath}\\Reader\\Main.py";
 
-        public static readonly string filesPath = "E:\\HONZA\\ContentGenerator\\";
+        public static readonly string filesPath = $"{generatedVideosPath}\\";
 
-        public static readonly string completedVideosFolder = "E:\\HONZA\\ContentGenerator\\CompletedVideos";
-
-        public static readonly string uploadedVideosFolder = "E:\\HONZA\\ContentGenerator\\UploadedVideos";
+        public static readonly string completedVideosFolder = $"{generatedVideosPath}\\CompletedVideos";
+        public static readonly string uploadedVideosFolder = $"{generatedVideosPath}\\UploadedVideos";
     }
 
     public static class LogingData

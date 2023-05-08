@@ -6,12 +6,13 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using Base = ProjectCarrot.WebScraperBase;
+using rUtils = ProjectCarrot.RedditSurferUtils;
 
 namespace ProjectCarrot
 {
     public static class RedditSurfer
     {
-        private static readonly string linePause = ",";
+        public static readonly string linePause = ",";
 
         private static Size browserSize = new Size(660, 1080);
 
@@ -102,14 +103,14 @@ namespace ProjectCarrot
 
             Debug.WriteLine(postId);
 
-            if (PostIsPromoted(posts[postId + 1])) return false;
+            if (rUtils.PostIsPromoted(posts[postId + 1])) return false;
 
-            try { OpenPost_(posts, postId + 2); }
+            try { OpenPost_(postId + 2); }
             catch
             {
-                Base.ClickElement("/html/body/div[1]/div/div[2]/div[4]/div/div/div/header/div/div[2]/button"); // interests tab
+                Base.ClickElement(AskRedditXPaths.interestsTab);
                 Thread.Sleep(100);
-                OpenPost_(posts, postId + 2);
+                OpenPost_(postId + 2);
             }
 
             IWebElement header = Base.WaitForElement(AskRedditXPaths.postHeader);
@@ -140,7 +141,15 @@ namespace ProjectCarrot
 
         private static void ReadAndScreenshotComments()
         {
-            var comments = GetComments(out string cPath);
+            var comments = rUtils.GetComments(out string cPath);
+
+            while (comments.Count == 0)
+            {
+                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton);
+                Thread.Sleep(100);
+
+                comments = rUtils.GetComments(out cPath);
+            }
 
             Debug.WriteLine($"last {comments.Last().Text}");
             Debug.WriteLine(cPath);
@@ -152,7 +161,7 @@ namespace ProjectCarrot
                 Debug.WriteLine($"sComment {i} = {selectedComments[i]}");
 
                 IWebElement cLocalsc = GetCommentsTextParent(cPath, selectedComments[i]);
-                string t = GetCommentText(cLocalsc, true);
+                string t = rUtils.GetCommentText(cLocalsc, true);
 
                 Debug.WriteLine(t);
             }
@@ -177,18 +186,6 @@ namespace ProjectCarrot
             }
         }
 
-        private static bool AllAudiosAreDownloaded()
-        {
-            string[] files = Directory.GetFiles(Paths.filesPath);
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                if (Path.GetExtension(files[i]) == ".crdownload") return false;
-            }
-
-            return true;
-        }
-
         private static void ReadCommentAndTakeScreenshot(IWebElement selectedComment, int id, string cPath, int commentIndex, out string text)
         {
             Base.ScrollToElement(selectedComment);
@@ -196,51 +193,14 @@ namespace ProjectCarrot
 
             IWebElement cLocal = GetCommentsTextParent(cPath, id);
 
-            text = GetCommentText(cLocal, true);
+            text = rUtils.GetCommentText(cLocal, true);
 
             TakeScreenshot(selectedComment, $"{FileNames.commentName}-{commentIndex}", 10);
             TextReader.ReadText(text, $"{FileNames.commentAudio}-{commentIndex}", Settings.speechType);
             Thread.Sleep(500);
         }
 
-        private static ReadOnlyCollection<IWebElement> GetComments(out string cPath)
-        {
-            cPath = AskRedditXPaths.comments_5;
-            ReadOnlyCollection<IWebElement> comments = Base.GetElements_X(cPath);
-
-            if (comments.Count == 0)
-            {
-                cPath = AskRedditXPaths.comments_6;
-                comments = Base.GetElements_X(cPath);
-            }
-
-            return comments;
-        }
-
-        private static IWebElement GetCommentsTextParent(string cPath, int i)
-        {
-            return Base.GetElement_X($"{CommentPath(cPath, i + 1)}/{AskRedditXPaths.commentLocal}");
-        }
-
-        private static string GetCommentText(IWebElement cLocal, bool includePauses = false)
-        {
-            ReadOnlyCollection<IWebElement> paragraphs = cLocal.FindElements(By.TagName("p"));
-
-            string t = "";
-
-            for (int i = 0; i < paragraphs.Count; i++)
-            {
-                if (includePauses)
-                {
-                    string lPause = i == paragraphs.Count - 1 ? "" : linePause;
-
-                    t += $"{paragraphs[i].Text} {lPause} ";
-                }
-                else t += $"{paragraphs[i].Text}";
-            }
-
-            return Utils.RemoveHyperlinks(t);
-        }
+        private static IWebElement GetCommentsTextParent(string cPath, int i) => rUtils.GetElementOnCommentLocalPath(cPath, i + 1, AskRedditXPaths.commentLocal);
 
         private static List<int> GetSuitableComments(ReadOnlyCollection<IWebElement> comments, string cPath)
         {
@@ -249,10 +209,10 @@ namespace ProjectCarrot
 
             for (int i = 0; i < comments.Count; i++)
             {
-                if (!CommentIsSuitable(cPath, i)) continue;
+                if (!rUtils.CommentIsSuitable(cPath, i)) continue;
 
                 IWebElement textParent = GetCommentsTextParent(cPath, i);
-                string cText = GetCommentText(textParent);
+                string cText = rUtils.GetCommentText(textParent);
 
                 int wCount = Utils.GetWordCount(cText);
 
@@ -268,88 +228,6 @@ namespace ProjectCarrot
             if (targetComments.Count == 0) targetComments = suitableComments;
 
             return targetComments;
-        }
-
-        /// <returns> if comment can be used for video </returns>
-        private static bool CommentIsSuitable(string cPath, int i)
-        {
-            if (i == 0) // bot comments should be the first (maybye - I hope)
-            {
-                if (WasPostedByModerator(cPath, i + 1)) return false;
-            }
-
-            IWebElement e = Base.GetElement_X($"{CommentPath(cPath, i + 1)}/{ AskRedditXPaths.commentPosition}");
-            if (e.Size.Height > 750) return false; // comment is too big and wouldn't fit into the screenshot
-
-            if (GetCommentLayer(e) != 0) return false; // if comment is a reply to another post
-
-            return true;
-        }
-
-        private static bool WasPostedByModerator(string cPath, int id)
-        {
-            IWebElement badge;
-
-            try
-            {
-                badge = Base.GetElement_X($"{CommentPath(cPath, id)}/{AskRedditXPaths.badgeLocal_3}");
-            }
-            catch
-            {
-                badge = Base.TryGetElement($"{CommentPath(cPath, id)}/{AskRedditXPaths.badgeLocal_4}");
-            }
-
-            if (badge == null) return false;
-
-            Debug.WriteLine(badge.Text);
-
-            if (badge.Text == "MOD")
-            {
-                Debug.WriteLine($"Skipping comment, because it was written by bot");
-                return true;
-            }
-
-            return false;
-        }
-
-        private static string GetCommentUserName(string cPath, int id)
-        {
-            try
-            {
-                return Base.GetElement_X($"{CommentPath(cPath, id)}/{AskRedditXPaths.commentUserName_1}").Text;
-            }
-            catch
-            {
-                try
-                {
-                    return Base.GetElement_X($"{CommentPath(cPath, id)}/{AskRedditXPaths.commentUserName_2}").Text;
-                }
-                catch { return ""; } // element is not a comment but button to open more comments
-            }
-        }
-
-        private static string CommentPath(string cPath, int id) => $"{cPath}[{id}]";
-
-        private static readonly int baseLength = "padding-left: ".Length;
-
-        /// <returns> if returns -1: it means target element is not a comment, but button that loads another comments </returns>
-        private static int GetCommentLayer(IWebElement e)
-        {
-            string padding = e.GetAttribute("style"); // returns: "padding-left: 37px;"
-
-            if (padding.Length == 0) return -1;
-
-            string fV = padding.Substring(baseLength, padding.Length - baseLength - 3);
-
-            switch (fV)
-            {
-                case ("16"): return 0;
-                case ("37"): return 1;
-                case ("58"): return 2;
-                case ("79"): return 3;
-                case ("100"): return 4;
-                default: return 99;
-            }
         }
 
         private static void SetupReaderPage()
@@ -382,17 +260,7 @@ namespace ProjectCarrot
             Base.ClickElement(AskRedditXPaths.finalLoginButton);
         }
 
-        private static bool PostIsPromoted(IWebElement post)
-        {
-            Debug.WriteLine("Is promoted ?");
-
-            try { post.FindElement(By.ClassName(AskRedditXPaths.post_promotedClass)); }
-            catch { return false; }
-
-            return true;
-        }
-
-        private static void OpenPost_(ReadOnlyCollection<IWebElement> posts, int sPost)
+        private static void OpenPost_(int sPost)
         {
             string path = AskRedditXPaths.posts + $"[{sPost}]/{AskRedditXPaths.openPostButton_local}";
             Base.ClickElement(path);
@@ -429,6 +297,10 @@ namespace ProjectCarrot
             screenshot.Save(String.Format(fileName, ImageFormat.Png));
         }
 
+        public static void OpenReddit() => driver.SwitchTo().Window(driver.WindowHandles.Last());
+        public static void OpenReader() => driver.SwitchTo().Window(driver.WindowHandles.First());
+
+        // ---- Audio files handler ----
         public static List<string> targetnames = new List<string>();
 
         private static void TryRenameAudioFiles()
@@ -491,8 +363,18 @@ namespace ProjectCarrot
             fileInfo.MoveTo(newPath);
         }
 
-        public static void OpenReddit() => driver.SwitchTo().Window(driver.WindowHandles.Last());
-        public static void OpenReader() => driver.SwitchTo().Window(driver.WindowHandles.First());
+        private static bool AllAudiosAreDownloaded()
+        {
+            string[] files = Directory.GetFiles(Paths.filesPath);
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (Path.GetExtension(files[i]) == ".crdownload") return false;
+            }
+
+            return true;
+        }
+        // ----
 
         public static void Test()
         {
