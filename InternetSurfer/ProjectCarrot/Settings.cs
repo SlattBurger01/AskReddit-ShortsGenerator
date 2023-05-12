@@ -10,9 +10,9 @@ namespace ProjectCarrot
         // for "Create and Upload" option
         public static readonly SessionSettings[] sessionsSettings = new SessionSettings[]
         {
-            new SessionSettings("p1", 4, RedditUrls.AskWomen, ChromePersons.person1, new UploadPlatforms(1, 1, 0)),
-            new SessionSettings("p2", 4, RedditUrls.AskReddit, ChromePersons.person2, new UploadPlatforms(1, 1, 0)),
-            new SessionSettings("p3", 4, RedditUrls.AskMen, ChromePersons.person3, new UploadPlatforms(1, 1, 0))
+            new SessionSettings("p2", 5, RedditUrls.AskReddit, ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
+            new SessionSettings("p1", 3, RedditUrls.AskWomen, ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            //new SessionSettings("p3", 3, RedditUrls.AskMen, ChromePersons.person3, new UploadPlatforms(1, 1, 0)) I don't remember what accont I have been using xDDD
         };
 
         public static readonly int sessionSettingsVideoCount = GetSessionSettingsVideoCount(sessionsSettings);
@@ -25,7 +25,10 @@ namespace ProjectCarrot
         public static readonly int maxWordCountPerComment = int.MaxValue;
         public static readonly int maxCharsCountPerComment = 2000;
 
-        //public static readonly int maxCommentCountPerVideo = 2; // not implemented yet
+        public static readonly int targetCommentMinWordCount = 25; // if no comment like this was found: this option will be ignored
+
+        public static readonly int maxCommentCountPerVideo = 5;
+        public static readonly int maxWordCountPerVideo = int.MaxValue;
 
         public static readonly int schedulePause = 4; // in 1/4 hours
 

@@ -93,6 +93,7 @@ namespace ProjectCarrot
 
         public static string CommentPath(string cPath, int id) => $"{cPath}[{id}]";
 
+        /// <returns> comment text (with pauses ?) without hyperlinks, no words are replaced </returns>
         public static string GetCommentText(IWebElement cLocal, bool includePauses = false)
         {
             ReadOnlyCollection<IWebElement> paragraphs = cLocal.FindElements(By.TagName("p"));

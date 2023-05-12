@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v6.0": {
       "ProjectCarrot/1.0.0": {
         "dependencies": {
-          "Selenium.WebDriver": "4.8.2",
+          "Selenium.WebDriver": "4.9.1",
+          "Selenium.WebDriver.ChromeDriver": "113.0.5672.6300",
           "Selenium.WebDriver.UndetectedChromeDriver": "2.3.0"
         },
         "runtime": {
@@ -33,7 +34,7 @@
       },
       "Selenium.Support/4.3.0": {
         "dependencies": {
-          "Selenium.WebDriver": "4.8.2"
+          "Selenium.WebDriver": "4.9.1"
         },
         "runtime": {
           "lib/net5.0/WebDriver.Support.dll": {
@@ -42,7 +43,7 @@
           }
         }
       },
-      "Selenium.WebDriver/4.8.2": {
+      "Selenium.WebDriver/4.9.1": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
         },
@@ -53,6 +54,7 @@
           }
         }
       },
+      "Selenium.WebDriver.ChromeDriver/113.0.5672.6300": {},
       "Selenium.WebDriver.UndetectedChromeDriver/2.3.0": {
         "dependencies": {
           "Sl.Selenium.Extensions.Chrome": "2.3.0"
@@ -68,7 +70,7 @@
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.1",
           "Selenium.Support": "4.3.0",
-          "Selenium.WebDriver": "4.8.2",
+          "Selenium.WebDriver": "4.9.1",
           "System.Text.Encoding.CodePages": "6.0.0"
         },
         "runtime": {
@@ -124,12 +126,19 @@
       "path": "selenium.support/4.3.0",
       "hashPath": "selenium.support.4.3.0.nupkg.sha512"
     },
-    "Selenium.WebDriver/4.8.2": {
+    "Selenium.WebDriver/4.9.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gNCaZrR32U2e9pyS+HXSqNHdcrIbqulOkcmycFoDL/tM5la4tELaZ3FpPRbq7tjJK3cKs5lLqVVFM9PfY1WW5g==",
-      "path": "selenium.webdriver/4.8.2",
-      "hashPath": "selenium.webdriver.4.8.2.nupkg.sha512"
+      "sha512": "sha512-GSBwNvJMtSGplGxkx8JLv55DxW5PTwTnRniD0q9G4PA7tcCVa3Hg/8/Jf6C3GDd+2DXWepQlBUR6GsIICHnBkw==",
+      "path": "selenium.webdriver/4.9.1",
+      "hashPath": "selenium.webdriver.4.9.1.nupkg.sha512"
+    },
+    "Selenium.WebDriver.ChromeDriver/113.0.5672.6300": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-koLDjWwvv8fMyZhUu8ROFvaBnNcSc3FfyavEc+LKsk7AzfHEDA2xph7WwJGz3Y20mxH1zxW/q+EyKG6Z3cM7UQ==",
+      "path": "selenium.webdriver.chromedriver/113.0.5672.6300",
+      "hashPath": "selenium.webdriver.chromedriver.113.0.5672.6300.nupkg.sha512"
     },
     "Selenium.WebDriver.UndetectedChromeDriver/2.3.0": {
       "type": "package",

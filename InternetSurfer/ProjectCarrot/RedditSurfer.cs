@@ -75,6 +75,9 @@ namespace ProjectCarrot
             {
                 Form1.form.label1.Text = $"Generating videos ({i} / {count})";
 
+                Form1.form.Invalidate();
+                Form1.form.Update();
+
                 bool created = CreateNew(i, vCount, settings);
 
                 if (created) vCount++;
@@ -103,11 +106,15 @@ namespace ProjectCarrot
 
             Debug.WriteLine(postId);
 
+            //if (posts[postId +1].GetAttribute("style") == "") -- its something like height = 10px and happens when promoted content is not loaded
+
             if (rUtils.PostIsPromoted(posts[postId + 1])) return false;
 
             try { OpenPost_(postId + 2); }
-            catch
+            catch (Exception e)
             {
+                Debug.WriteLine($"Post could not be opened! {e.Message}");
+
                 Base.ClickElement(AskRedditXPaths.interestsTab);
                 Thread.Sleep(100);
                 OpenPost_(postId + 2);
@@ -207,22 +214,31 @@ namespace ProjectCarrot
             List<int> targetComments = new List<int>();
             List<int> suitableComments = new List<int>();
 
+            int totalWordCount = 0;
+
             for (int i = 0; i < comments.Count; i++)
             {
                 if (!rUtils.CommentIsSuitable(cPath, i)) continue;
 
-                IWebElement textParent = GetCommentsTextParent(cPath, i);
-                string cText = rUtils.GetCommentText(textParent);
+                //IWebElement textParent = GetCommentsTextParent(cPath, i);
+                string cText = rUtils.GetCommentText(GetCommentsTextParent(cPath, i));
+
+                if (cText.Length == 0) continue; // comment was propably removed by moderator
 
                 int wCount = Utils.GetWordCount(cText);
 
+                if (wCount > Settings.maxWordCountPerComment) continue;
                 if (cText.Length > Settings.maxCharsCountPerComment) continue;
+
+                if (suitableComments.Count + 1 > Settings.maxCommentCountPerVideo) break;
+                if (totalWordCount + wCount > Settings.maxWordCountPerVideo) break;
 
                 Debug.WriteLine($"Comment {i} is suitable ({wCount})");
 
                 suitableComments.Add(i);
+                totalWordCount += wCount;
 
-                if (wCount >= 25) targetComments.Add(i);
+                if (wCount >= Settings.targetCommentMinWordCount) targetComments.Add(i);
             }
 
             if (targetComments.Count == 0) targetComments = suitableComments;
@@ -230,10 +246,7 @@ namespace ProjectCarrot
             return targetComments;
         }
 
-        private static void SetupReaderPage()
-        {
-            TextReader.SetUpReader(Settings.speechType, driver);
-        }
+        private static void SetupReaderPage() => TextReader.SetUpReader(Settings.speechType, driver);
 
         private static void SetupRedditPage(string Url)
         {
@@ -263,6 +276,9 @@ namespace ProjectCarrot
         private static void OpenPost_(int sPost)
         {
             string path = AskRedditXPaths.posts + $"[{sPost}]/{AskRedditXPaths.openPostButton_local}";
+
+            Debug.WriteLine($"Opening {sPost} post at path ({path})");
+
             Base.ClickElement(path);
 
             Base.ScrollToTop(); // you have to reset position immidiatelly to make correct screenshots
