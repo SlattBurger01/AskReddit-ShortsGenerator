@@ -2,22 +2,24 @@ from moviepy.editor import *
 import sys
 import Utils
 
+contentGeneratorFolder = "E:\ContentGenerator"
+
 try:
     videoIdentifier = sys.argv[1]  # at position 0 is file name
+    
 except:
     videoIdentifier = "test_128"
 
 print(f"Calling python script id = ({videoIdentifier})")
 
-image1 = ImageClip(f'E:\HONZA\ContentGenerator\postH.png')
-audio1 = AudioFileClip(f'E:\HONZA\ContentGenerator\postA.mp3')
+image1 = ImageClip(f'{contentGeneratorFolder}\postH.png')
+audio1 = AudioFileClip(f'{contentGeneratorFolder}\postA.mp3')
 
 imagePosition = ("center", 500)
 
 firstPause = .4  # in seconds, pause between title and first comment
 pause = .5  # in seconds, pause between audios and videos
 beforeEndPause = .4  # in seconds
-
 
 def EditVideo(commentData):
     print("Editing video !")
@@ -82,8 +84,10 @@ def NextImageStart(audio1):
 
 
 def GetVideoPath(videoIdentifier):
-    return f"E:\HONZA\ContentGenerator\CompletedVideos\Video-{videoIdentifier}.mp4"
+    return f"{contentGeneratorFolder}\CompletedVideos\Video-{videoIdentifier}.mp4"
 
 
 data = Utils.GetComments()
 EditVideo(data)
+
+print("Edit")

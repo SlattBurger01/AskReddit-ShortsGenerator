@@ -91,7 +91,7 @@ namespace ProjectCarrot
 
         private static void ReadText_Pyttsx3(string text, string fileName)
         {
-            string r = PythonHelper.CallPythonFile(Paths.customReaderPath, $"{s}{text}{s} {fileName}");
+            string r = PythonHelper.CallPythonFile(Paths.customReaderPath, $"{s}{text}{s} {fileName} {Paths.filesPath}");
 
             Debug.WriteLine(r);
         }

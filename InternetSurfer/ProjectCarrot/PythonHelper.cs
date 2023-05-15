@@ -6,10 +6,10 @@ namespace ProjectCarrot
     {
         public static string CallPythonFile(string file, string args)
         {
-            Debug.WriteLine("Calling python file !");
+            Debug.WriteLine($"Calling python file {file}!");
 
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = @"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\python.exe";
+            start.FileName = Paths.pythonPath;
             start.Arguments = file + $" {args}";
 
             start.UseShellExecute = false;

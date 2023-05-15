@@ -1,25 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\HONZA\\InsaneProgramming\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj": {}
+    "E:\\OtherProjects\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj": {}
   },
   "projects": {
-    "E:\\HONZA\\InsaneProgramming\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj": {
+    "E:\\OtherProjects\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\HONZA\\InsaneProgramming\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj",
+        "projectUniqueName": "E:\\OtherProjects\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj",
         "projectName": "ProjectCarrot",
-        "projectPath": "E:\\HONZA\\InsaneProgramming\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj",
-        "packagesPath": "C:\\Users\\Jan\\.nuget\\packages\\",
-        "outputPath": "E:\\HONZA\\InsaneProgramming\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\obj\\",
+        "projectPath": "E:\\OtherProjects\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj",
+        "packagesPath": "C:\\Users\\kocna\\.nuget\\packages\\",
+        "outputPath": "E:\\OtherProjects\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Jan\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\kocna\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -77,7 +72,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

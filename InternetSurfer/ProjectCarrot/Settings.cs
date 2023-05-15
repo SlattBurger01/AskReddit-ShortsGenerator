@@ -5,7 +5,7 @@ namespace ProjectCarrot
     public static class Settings
     {
         // for "Create" and "Upload" option
-        public static readonly SessionSettings defaultSettings = new SessionSettings("def", 2, RedditUrls.AskReddit, ChromePersons.person3, new UploadPlatforms(1, 1, 0));
+        public static readonly SessionSettings defaultSettings = new SessionSettings("def", 2, RedditUrls.AskReddit, ChromePersons.person2, new UploadPlatforms(1, 1, 0));
 
         // for "Create and Upload" option
         public static readonly SessionSettings[] sessionsSettings = new SessionSettings[]
@@ -17,7 +17,7 @@ namespace ProjectCarrot
 
         public static readonly int sessionSettingsVideoCount = GetSessionSettingsVideoCount(sessionsSettings);
 
-        public static readonly TextToSpeechType speechType = TextToSpeechType.ttsfree;
+        public static readonly TextToSpeechType speechType = TextToSpeechType.pyttsx3;
 
         public static readonly bool loginToReddit = true;
         public static readonly bool loginToTtsFree = true;

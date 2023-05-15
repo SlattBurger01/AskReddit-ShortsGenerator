@@ -141,14 +141,23 @@ namespace ProjectCarrot
 
     public static class Paths
     {
-        private static readonly string projectPath = "E:\\HONZA\\InsaneProgramming\\ProjectCarrot";
-        private static readonly string generatedVideosPath = "E:\\HONZA\\ContentGenerator";
+        //private static readonly string projectPath = "E:\\HONZA\\InsaneProgramming\\ProjectCarrot"; // old machine
+        private static readonly string projectPath = "E:\\OtherProjects\\ProjectCarrot"; // new machine
 
-        public static readonly string addBlockPath = "C:\\Users\\Jan\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 15\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.4.1_0.crx";
+        //private static readonly string generatedVideosPath = "E:\\HONZA\\ContentGenerator"; // old machine
+        private static readonly string generatedVideosPath = "E:\\ContentGenerator"; // new machine
 
+        //public static readonly string addBlockPath = "C:\\Users\\Jan\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 15\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.4.1_0.crx"; // old machine
+        public static readonly string addBlockPath = "C:\\Users\\kocna\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.6.0_0.crx"; // new machine
+
+        public static readonly string pythonPath = "C:\\Users\\kocna\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"; // make sure this path is to actuall python, not just its shortcut
+
+
+        // this should not be necessary to change
         public static readonly string videoEditorPath = $"{projectPath}\\VideoEditor\\Main.py";
         public static readonly string customReaderPath = $"{projectPath}\\Reader\\Main.py";
 
+        /// <summary> includes "/" </summary>
         public static readonly string filesPath = $"{generatedVideosPath}\\";
 
         public static readonly string completedVideosFolder = $"{generatedVideosPath}\\CompletedVideos";

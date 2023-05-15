@@ -12,7 +12,7 @@ namespace ProjectCarrot
         public static string SpecialFolder => specialFolder;
 
         private static readonly string specialFolder = CreateSpecialFolderName();
-        private static readonly string usedFolder = $@"E:\HONZA\ContentGenerator\Used\{specialFolder}";
+        private static readonly string usedFolder = $@"{Paths.filesPath}\Used\{specialFolder}";
 
         private static string CreateSpecialFolderName()
         {
@@ -32,7 +32,7 @@ namespace ProjectCarrot
 
         public static void CreateSpecialFolder()
         {
-            Directory.CreateDirectory($@"E:\HONZA\ContentGenerator\Used\{specialFolder}");
+            Directory.CreateDirectory($@"{Paths.filesPath}Used\{specialFolder}");
 
             Debug.WriteLine($"Special folder created ({specialFolder})");
         }
@@ -52,7 +52,7 @@ namespace ProjectCarrot
 
         private static void MoveUsedResources(int videoIdentifier, SessionSettings settings)
         {
-            var s = Directory.GetFiles(@"E:\HONZA\ContentGenerator\");
+            var s = Directory.GetFiles(Paths.filesPath);
 
             for (int i = 0; i < s.Length; i++)
             {

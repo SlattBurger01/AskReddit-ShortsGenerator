@@ -3,32 +3,36 @@ import random
 import Paths
 from moviepy.editor import VideoFileClip
 
+contentGeneratorFolder = "E:\ContentGenerator"
 
 def GetComments():
-    # E:\HONZA\ContentGenerator\commentH-1
-    comments = glob.glob("E:\HONZA\ContentGenerator\*.png")
-    audios = glob.glob("E:\HONZA\ContentGenerator\*.mp3")
+    comments = glob.glob(f"{contentGeneratorFolder}\*.png")
+    audios = glob.glob(f"{contentGeneratorFolder}\*.mp3")
 
     sortedCommentsH = GetSortedComments_(comments)
     sortedCommentsA = GetSortedComments_(audios)
 
-    print(f"{sortedCommentsH} || {sortedCommentsA}")
+    print(f"sorted: {sortedCommentsH} || {sortedCommentsA}")
 
     return (sortedCommentsH, sortedCommentsA)
 
 
+# "comments" is list of comment paths
 def GetSortedComments_(comments):
     sortedComments = []
 
     cPosition = 0
 
     for x in comments:
+
         for comment in comments:
             if(x == comment):
                 continue
 
-            if(comment.__contains__("comment")):
-                v = comment[35]
+            if(comment.__contains__("comment")):                
+                v = comment[29] # this will fuck up everything if any path is changed xDDD
+                print(f"Comment {v}")
+
                 if(v == f"{cPosition}"):
                     sortedComments.append(comment)
                     cPosition += 1
