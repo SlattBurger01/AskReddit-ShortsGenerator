@@ -43,7 +43,7 @@ namespace ProjectCarrot
         }
 
         /// <param name="cPath"> used path </param>
-        /// <returns> found comments</returns>
+        /// <returns> found comments </returns>
         public static ReadOnlyCollection<IWebElement> GetComments(out string cPath)
         {
             cPath = AskRedditXPaths.comments_5;

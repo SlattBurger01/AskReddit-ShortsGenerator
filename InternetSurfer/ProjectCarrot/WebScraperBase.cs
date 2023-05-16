@@ -32,6 +32,7 @@ namespace ProjectCarrot
         public static IWebElement GetElement_X(string xPath) => driver.FindElement(By.XPath(xPath));
         public static ReadOnlyCollection<IWebElement> GetElements_X(string xPath) => driver.FindElements(By.XPath(xPath));
 
+        /// <summary> Clicks element on target path, if error is thrown --> it will be ignored </summary>
         public static void TryClickElement(string xPath)
         {
             try { ClickElement(xPath); } catch { }
@@ -45,7 +46,8 @@ namespace ProjectCarrot
             catch { element = null; return false; }
         }
 
-        public static IWebElement TryGetElement(string xPath)
+        /// <returns> element (if exists, otherwise null) </returns>
+        public static IWebElement? TryGetElement(string xPath)
         {
             try { return GetElement_X(xPath); }
             catch { return null; }
@@ -58,10 +60,12 @@ namespace ProjectCarrot
         }
 
         private static readonly int waitPause = 50; // in ms
+        private static readonly int maxWaitTime = 10_000; // in ms
 
+        /// <summary> Waits until element exists (on path) or until it max wait time is exeeded</summary>
         public static IWebElement? WaitForElement(string xPath)
         {
-            int overflow = 10_000; // in ms
+            int overflow = maxWaitTime; // in ms
 
             while (true)
             {
@@ -74,23 +78,25 @@ namespace ProjectCarrot
             }
         }
 
+        /// <summary> Accepts alert, if error is thrown --> it will be ignored </summary>
         public static void TryAcceptAlert()
         {
-            try { driver.SwitchTo().Alert().Accept(); }
-            catch { }
+            try { driver.SwitchTo().Alert().Accept(); } catch { }
         }
 
+        /// <summary> Dismisses alert, if error is thrown --> it will be ignored </summary>
         public static void TryDismissAlert()
         {
-            try { driver.SwitchTo().Alert().Dismiss(); }
-            catch { }
+            try { driver.SwitchTo().Alert().Dismiss(); } catch { }
         }
 
+        /// <summary> instantly scrolls to element </summary>
         public static void ScrollToElement(IWebElement element)
         {
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element);
         }
 
+        /// <summary> instantly scrolls to top </summary>
         public static void ScrollToTop()
         {
             ((IJavaScriptExecutor)driver).ExecuteScript("window.scrollTo(0, 0);");

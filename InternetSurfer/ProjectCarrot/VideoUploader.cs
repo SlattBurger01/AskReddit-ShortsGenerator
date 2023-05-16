@@ -54,7 +54,7 @@ namespace ProjectCarrot
             for (int i = 0; i < videos.Length; i++)
             {
                 UploadVideoToYoutube(videos[i], i);
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
             }
         }
 
@@ -66,10 +66,13 @@ namespace ProjectCarrot
 
             IWebElement nameInput = Base.GetElement_X(YouTubeXPaths.videoNameInput);
 
-            nameInput.Clear();
-            Thread.Sleep(250);
+            while (nameInput.Text != string.Empty)
+            {
+                Debug.WriteLine(nameInput.Text);
+                nameInput.SendKeys(Keys.Backspace);
+            }
 
-            while(nameInput.Text.Length > 0) { nameInput.Clear(); }
+            Debug.WriteLine(nameInput.Text);
 
             string header = LocalFilesHandler.GetVideoName(y);
             string headerF = header.Length > 100 ? "Thoughts?" : header;

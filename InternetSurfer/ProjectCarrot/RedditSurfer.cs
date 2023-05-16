@@ -113,6 +113,10 @@ namespace ProjectCarrot
             try { OpenPost_(postId + 2); }
             catch (Exception e)
             {
+                IWebElement element = Base.GetElement_X(GetPostPath(postId + 2));
+
+                if (element.Size.Height == 0) return false; // fcked up comment 
+
                 Debug.WriteLine($"Post could not be opened! {e.Message}");
 
                 Base.ClickElement(AskRedditXPaths.interestsTab);
@@ -273,11 +277,14 @@ namespace ProjectCarrot
             Base.ClickElement(AskRedditXPaths.finalLoginButton);
         }
 
+        private static string GetPostPath(int sPost) => $"{AskRedditXPaths.posts}[{sPost}]";
+
         private static void OpenPost_(int sPost)
         {
-            string path = AskRedditXPaths.posts + $"[{sPost}]/{AskRedditXPaths.openPostButton_local}";
+            //string path = AskRedditXPaths.posts + $"[{sPost}]/{AskRedditXPaths.openPostButton_local}";
+            string path = $"{GetPostPath(sPost)}/{AskRedditXPaths.openPostButton_local}";
 
-            Debug.WriteLine($"Opening {sPost} post at path ({path})");
+            Debug.WriteLine($"Opening post ({sPost}) at path ({path})");
 
             Base.ClickElement(path);
 

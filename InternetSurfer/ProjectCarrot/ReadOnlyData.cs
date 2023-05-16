@@ -148,7 +148,7 @@ namespace ProjectCarrot
         private static readonly string generatedVideosPath = "E:\\ContentGenerator"; // new machine
 
         //public static readonly string addBlockPath = "C:\\Users\\Jan\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 15\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.4.1_0.crx"; // old machine
-        public static readonly string addBlockPath = "C:\\Users\\kocna\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.6.0_0.crx"; // new machine
+        public static readonly string addBlockPath = "C:\\Users\\kocna\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.6.0_0.crx"; // new machine
 
         public static readonly string pythonPath = "C:\\Users\\kocna\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"; // make sure this path is to actuall python, not just its shortcut
 
