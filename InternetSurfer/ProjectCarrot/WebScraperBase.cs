@@ -1,8 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using Selenium.Extensions;
 using System.Collections.ObjectModel;
-using System.Xml.Linq;
 
 namespace ProjectCarrot
 {

@@ -10,8 +10,8 @@ namespace ProjectCarrot
         // for "Create and Upload" option
         public static readonly SessionSettings[] sessionsSettings = new SessionSettings[]
         {
-            new SessionSettings("p1", 1, RedditUrls.AskReddit, ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
-            //new SessionSettings("p2", 4, RedditUrls.AskWomen, ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
+            new SessionSettings("p1", 4, RedditUrls.AskReddit, ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            new SessionSettings("p2", 4, RedditUrls.AskWomen, ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
             //new SessionSettings("p3", 3, RedditUrls.AskMen, ChromePersons.person3, new UploadPlatforms(1, 1, 0)) I don't remember what account I have been using xDDD
         };
 

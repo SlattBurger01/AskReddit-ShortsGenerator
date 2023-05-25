@@ -65,7 +65,8 @@ namespace ProjectCarrot
         //public static readonly string openedPostCloseButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[1]/div/div[2]/button";
         public static readonly string openedPostCloseButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[5]/button";
 
-        public static readonly string notLoadedComments_RetryButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/button";
+        public static readonly string notLoadedComments_RetryButton_1 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/button";
+        public static readonly string notLoadedComments_RetryButton_2 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[5]/button";
 
         public static string interestsTab = "/html/body/div[1]/div/div[2]/div[4]/div/div/div/header/div/div[2]/button";
 

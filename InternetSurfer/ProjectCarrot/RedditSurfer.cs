@@ -156,7 +156,8 @@ namespace ProjectCarrot
 
             while (comments.Count == 0)
             {
-                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton);
+                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton_1);
+                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton_2);
                 Thread.Sleep(100);
 
                 comments = rUtils.GetComments(out cPath);
@@ -254,6 +255,8 @@ namespace ProjectCarrot
 
         private static void SetupRedditPage(string Url)
         {
+            Debug.WriteLine("Setting up reddit");
+
             driver.SwitchTo().NewWindow(WindowType.Tab);
 
             driver.Navigate().GoToUrl(Url);
