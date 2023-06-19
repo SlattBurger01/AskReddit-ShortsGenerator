@@ -30,7 +30,7 @@ namespace ProjectCarrot
         public static readonly int maxCommentCountPerVideo = 5;
         public static readonly int maxWordCountPerVideo = int.MaxValue;
 
-        public static readonly int schedulePause = 4; // in 1/4 hours
+        public static readonly int schedulePause = 6; // in 1/4 hours
 
         // debug optios
         public static readonly bool renderVideo = true;

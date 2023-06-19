@@ -131,6 +131,15 @@ namespace ProjectCarrot
         public static readonly string tryAgainButton = "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div/div[2]/div[1]/div/div/div[2]/div/button";
     }
 
+    public static class TiktokPaths
+    {
+        public static string videoInput = "/html/body/div[1]/div/div/div/div/div/div/div/input";
+
+        public static string hashtagRecomendation = "/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div[1]/div[2]";
+
+        public static string uploadButton = "//*[@id=\"root\"]/div/div/div/div[2]/div[2]/div[2]/div[7]/div[2]/button";
+    }
+
     public static class FileNames
     {
         public static readonly string postName = "postH";

@@ -11,7 +11,7 @@ namespace ProjectCarrot
 {
     public static class VideoUploader
     {
-        private static string[] GetVideos() => Directory.GetFiles(Paths.completedVideosFolder);
+        public static string[] GetVideos() => Directory.GetFiles(Paths.completedVideosFolder);
 
         private static SlDriver driver;
 
@@ -169,7 +169,7 @@ namespace ProjectCarrot
         {
             while (true)
             {
-                if (Base.ElementExists("/html/body/div[1]/div/div/div/div/div/div/input", out IWebElement e))
+                if (Base.ElementExists(TiktokPaths.videoInput, out IWebElement e))
                 {
                     e.SendKeys(videoName);
                     break;
@@ -214,14 +214,14 @@ namespace ProjectCarrot
             {
                 actions.SendKeys($" #{tags[i]}").Perform();
 
-                Base.WaitForElement("/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div[1]/div[2]"); // '#' recomendations
+                Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
                 Thread.Sleep(200);
 
                 actions.SendKeys(Keys.Enter).Perform();
                 Thread.Sleep(500);
             }
 
-            Base.ClickElement("//*[@id=\"root\"]/div/div/div/div[2]/div[2]/div[2]/div[7]/div[2]/button"); // click post
+            Base.ClickElement(TiktokPaths.uploadButton); // click post
 
             Thread.Sleep(1000);
 
