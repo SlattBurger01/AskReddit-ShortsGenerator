@@ -37,18 +37,24 @@ namespace ProjectCarrot
             Debug.WriteLine($"Special folder created ({specialFolder})");
         }
 
+        public static void ClearCommentsText() { commentsText = ""; }
+
+        public static string commentsText = "";
+
         public static void EditVideo(int videoIdentifier, string sessionName, SessionSettings settings)
         {
             string result = "";
 
-            if (Settings.renderVideo) result = CallPythonFile(Paths.videoEditorPath, $"{sessionName}_{videoIdentifier}");
+            char s = '"';
+
+            if (Settings.renderVideo) result = CallVideoEditorPythonFile($"{sessionName}_{videoIdentifier} {true} {s}{commentsText}{s}");
 
             Debug.WriteLine(result);
 
             MoveUsedResources(videoIdentifier, settings);
         }
 
-        private static string CallPythonFile(string file, string args) => PythonHelper.CallPythonFile(file, args);
+        private static string CallVideoEditorPythonFile(string args) => PythonHelper.CallPythonFile(Paths.videoEditorPath, args);
 
         private static void MoveUsedResources(int videoIdentifier, SessionSettings settings)
         {

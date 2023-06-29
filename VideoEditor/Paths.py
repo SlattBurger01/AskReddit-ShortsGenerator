@@ -1,4 +1,5 @@
 backgroundsPath = "E:\ContentGenerator\Backgrounds"
+contentGeneratorFolder = "E:\ContentGenerator"
 
 bg1 = f"{backgroundsPath}\Background-SubwaySurfers.mp4"
 bg2 = f"{backgroundsPath}\Background-MinecraftParkour.mp4"

@@ -1,21 +1,25 @@
 from moviepy.editor import *
-import sys
 import Utils
+import Paths
+import sys
+import SubtitlesGenerator
+from moviepy.video.tools.subtitles import SubtitlesClip
 
-contentGeneratorFolder = "E:\ContentGenerator"
+# args = 0: name, 1: videoId, 2: enable subtitles, 3: video text that is going to be used for subs
 
-try:
+try: # called via c# file
     videoIdentifier = sys.argv[1]  # at position 0 is file name
-    
-except:
+    enableSubs = sys.argv[2]
+    videoText = sys.argv[3]
+except: # called via visual studio code
     videoIdentifier = "test_128"
+    enableSubs = True
+    videoText = "I have passed two nude hikers in my 35 years of hiking. One male, one female, years and thousands of miles apart. Both said hello. I said hello. One mentioned the trail was washed out ahead but a second trail has been cut. I thanked them for the heads-up. Some people like the wind and sun on their skin. Both had on hiking boots. To each their own."
 
-print(f"Calling python script id = ({videoIdentifier})")
+print(f"Calling python script id = ({videoIdentifier}) with args: {sys.argv}")
 
-image1 = ImageClip(f'{contentGeneratorFolder}\postH.png')
-audio1 = AudioFileClip(f'{contentGeneratorFolder}\postA.mp3')
-
-imagePosition = ("center", 500)
+image1 = ImageClip(f'{Paths.contentGeneratorFolder}\postH.png')
+audio1 = AudioFileClip(f'{Paths.contentGeneratorFolder}\postA.mp3')
 
 firstPause = .4  # in seconds, pause between title and first comment
 pause = .5  # in seconds, pause between audios and videos
@@ -24,14 +28,14 @@ beforeEndPause = .4  # in seconds
 def EditVideo(commentData):
     print("Editing video !")
 
-    a1 = GetAudio(audio1, 0)
-    i1 = GetImage(image1, 0, a1.duration)
+    a1 = Utils.GetAudio(audio1, 0)
+    i1 = Utils.GetImage(image1, 0, a1.duration)
 
     images = commentData[0]
     audios = commentData[1]
 
-    finalAudios = [a1]
-    finalVideos = [i1]
+    finalAudios : list[AudioClip] = [a1]
+    finalVideos : list[VideoClip] = [i1]
 
     audioDuration = a1.duration + firstPause
 
@@ -46,48 +50,43 @@ def EditVideo(commentData):
         image = ImageClip(images[i])
 
         # pause is included in "NextImageStart" !!!
-        a = GetAudio(audio, NextImageStart(bAudio))
-        img = GetImage(image, NextImageStart(bAudio), a.duration)
+        a = Utils.GetAudio(audio, NextImageStart(bAudio))
+        img = Utils.GetImage(image, NextImageStart(bAudio), a.duration)
 
         audioDuration += a.duration + pause
 
         finalAudios.append(a)
-        finalVideos.append(img)
+
+        if(enableSubs == False):
+            finalVideos.append(img)
 
         recentAudio = a
 
     videoDuration = audioDuration + beforeEndPause
 
-    finalVideos.insert(0, Utils.GetBackground(videoDuration))
-
-    finalAudio = CompositeAudioClip(finalAudios)
-    final = CompositeVideoClip(finalVideos)
-
     print(f"final duration = {videoDuration}")
 
+    finalVideos.insert(0, Utils.GetBackground(videoDuration))
+
+    finalAudioClip : CompositeAudioClip = CompositeAudioClip(finalAudios).set_fps(44100)
+
+    if (enableSubs):
+        subtitles : SubtitlesClip = SubtitlesGenerator.GetSubtitles(finalAudioClip, videoText, a1.duration + pause)
+        finalVideos.append(subtitles.set_duration(videoDuration))
+
+        for x in subtitles.subtitles:
+            print(x)
+
+    final : CompositeVideoClip = CompositeVideoClip(finalVideos)
+
     final.duration = videoDuration
-    final.audio = finalAudio
+    final.audio = finalAudioClip
 
-    final.write_videofile(GetVideoPath(videoIdentifier))
-
-
-def GetImage(refImage, start, duration):
-    return refImage.set_start(start).set_position(imagePosition).set_duration(duration).resize(2).set_opacity(.95)
-
-
-def GetAudio(refAudio, start):
-    return Utils.CropSilentEnd(refAudio.set_start(start))
-
+    final.write_videofile(Utils.GetVideoPath(videoIdentifier))
 
 def NextImageStart(audio1):
     return audio1.start + audio1.duration + pause
 
 
-def GetVideoPath(videoIdentifier):
-    return f"{contentGeneratorFolder}\CompletedVideos\Video-{videoIdentifier}.mp4"
-
-
-data = Utils.GetComments()
-EditVideo(data)
-
-print("Edit")
+comments = Utils.GetComments()
+EditVideo(comments)
