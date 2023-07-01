@@ -51,13 +51,13 @@ def EditVideo(commentData):
 
         # pause is included in "NextImageStart" !!!
         a = Utils.GetAudio(audio, NextImageStart(bAudio))
-        img = Utils.GetImage(image, NextImageStart(bAudio), a.duration)
 
         audioDuration += a.duration + pause
 
         finalAudios.append(a)
 
-        if(enableSubs == False):
+        if (enableSubs == False):
+            img = Utils.GetImage(image, NextImageStart(bAudio), a.duration)
             finalVideos.append(img)
 
         recentAudio = a

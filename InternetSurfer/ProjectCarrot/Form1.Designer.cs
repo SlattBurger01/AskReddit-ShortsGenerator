@@ -169,10 +169,11 @@
         #endregion
 
         public Button button1;
-        public Label label1;
         public Button button2;
         public Button button3;
         public Button button4;
+
+        public Label label1;
         public Label label2;
         public Label label3; // create time
         public Label label4; // upload time

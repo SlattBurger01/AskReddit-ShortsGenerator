@@ -1,5 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.DevTools.V111.Audits;
+using ProjectCarrot.Text;
 using Selenium.Extensions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,26 +16,54 @@ namespace ProjectCarrot
     {
         public static readonly string linePause = ",";
 
-        private static Size browserSize = new Size(660, 1080);
-
-        private static ChromeDriver driver;
+        public static ChromeDriver driver;
 
         public static void SetUp(string Url)
         {
             SetupDriver();
 
-            driver.Manage().Window.Size = browserSize;
+            driver.Manage().Window.Size = Settings.browserSize;
 
             SetupReaderPage();
             SetupRedditPage(Url);
 
-            Thread.Sleep(2000); // wait for reddit to load enough posts
+            //Thread.Sleep(2000); // wait for reddit to load enough posts
+
+            /*while (true)
+            {
+                ReadOnlyCollection<IWebElement> posts = Base.GetElements_X(AskRedditXPaths.posts);
+
+                if (posts.Count > 2) break; // two should be enough for some time (rest should load up while working with these comments)
+
+                Thread.Sleep(50);
+            }*/
+
+            WaitForPostsLoad();
 
             TrySwitchToDarkMode();
         }
 
+        public static void WaitForPostsLoad()
+        {
+            float elapsed = 0;
+
+            while (true)
+            {
+                ReadOnlyCollection<IWebElement> posts = Base.GetElements_X(AskRedditXPaths.posts);
+
+                if (posts.Count > 2) return; // two should be enough for some time (rest should load up while working with these comments)
+
+                Thread.Sleep(Base.waitPause);
+                elapsed += Base.waitPause;
+
+                if (elapsed >= Base.maxWaitTime) return;
+            }
+        }
+
         private static void SetupDriver()
         {
+            bool installAddblock = Settings.speechType == TextToSpeechType.ttsfree;
+
             ChromeOptions options = Base.GetDefaultOptions();
 
             // disable "save password" popup
@@ -41,12 +71,12 @@ namespace ProjectCarrot
             options.AddUserProfilePreference("profile.password_manager_enabled", false);
             options.AddArgument("mute-audio");
 
-            if (Settings.speechType == TextToSpeechType.ttsfree) options.AddExtension(Paths.addBlockPath);
+            if (installAddblock) options.AddExtension(Paths.addBlockPath);
 
             driver = new ChromeDriver(options);
             Base.driver = driver;
 
-            if (Settings.speechType == TextToSpeechType.ttsfree)
+            if (installAddblock)
             {
                 while (true)
                 {
@@ -73,11 +103,6 @@ namespace ProjectCarrot
 
             while (vCount < count + startPost)
             {
-                Form1.form.label1.Text = $"Generating videos ({i} / {count})";
-
-                Form1.form.Invalidate();
-                Form1.form.Update();
-
                 bool created = CreateNew(i, vCount, settings);
 
                 if (created) vCount++;
@@ -102,13 +127,11 @@ namespace ProjectCarrot
         {
             onBeforeNewVideoGeneratingStart.Invoke();
 
-            Debug.WriteLine($"Creating new video ({videoId})!");
+            Debug.WriteLine($"Creating new video ({videoId}), post: {postId}!");
 
             OpenReddit();
 
             ReadOnlyCollection<IWebElement> posts = Base.GetElements_X(AskRedditXPaths.posts);
-
-            Debug.WriteLine(postId);
 
             //if (posts[postId +1].GetAttribute("style") == "") -- its something like height = 10px and happens when promoted content is not loaded
 
@@ -117,7 +140,7 @@ namespace ProjectCarrot
             try { OpenPost_(postId + 2); }
             catch (Exception e)
             {
-                IWebElement element = Base.GetElement_X(GetPostPath(postId + 2));
+                IWebElement element = Base.GetElement_X(rUtils.GetPostPath(postId + 2));
 
                 if (element.Size.Height == 0) return false; // fcked up comment 
 
@@ -132,22 +155,22 @@ namespace ProjectCarrot
 
             LocalFilesHandler.videoNames.Add(header.Text);
 
-            TakeScreenshot(Base.GetElement_X(AskRedditXPaths.post), FileNames.postName, 0);
+            rUtils.TakeScreenshot(Base.GetElement_X(AskRedditXPaths.post), FileNames.postName, 0);
             TextReader.ReadText(header.Text, FileNames.postAudio, Settings.speechType, out _);
 
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
 
             ReadAndScreenshotComments();
 
             while (true)
             {
-                if (AllAudiosAreDownloaded()) break;
+                if (AudioFilesHandler.AllAudiosAreDownloaded()) break;
 
                 Thread.Sleep(50);
             }
 
             driver.Navigate().Back();
-            TryRenameAudioFiles();
+            AudioFilesHandler.TryRenameAudioFiles();
 
             VideoEditor.EditVideo(videoId, settings.sessionName, settings);
 
@@ -156,7 +179,19 @@ namespace ProjectCarrot
 
         private static void ReadAndScreenshotComments()
         {
-            var comments = rUtils.GetComments(out string cPath);
+            Thread.Sleep(1000);
+
+            if (!rUtils.WaitForCommentsToLoad(out ReadOnlyCollection<IWebElement> comments, out string cPath))
+            {
+                Debug.WriteLine($"Comments not found on {cPath}");
+
+                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton_1);
+                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton_2);
+
+                rUtils.WaitForCommentsToLoad(out comments, out cPath);
+            }
+
+            /*ReadOnlyCollection<IWebElement> comments = rUtils.GetComments(out string cPath);
 
             while (comments.Count == 0)
             {
@@ -165,10 +200,9 @@ namespace ProjectCarrot
                 Thread.Sleep(100);
 
                 comments = rUtils.GetComments(out cPath);
-            }
+            }*/
 
-            Debug.WriteLine($"last {comments.Last().Text}");
-            Debug.WriteLine(cPath);
+            Debug.WriteLine($"Last: {comments.Last().Text}, path = {cPath}");
 
             List<int> selectedComments = GetSuitableComments(comments, cPath);
 
@@ -176,7 +210,7 @@ namespace ProjectCarrot
             {
                 Debug.WriteLine($"sComment {i} = {selectedComments[i]}");
 
-                IWebElement cLocalsc = GetCommentsTextParent(cPath, selectedComments[i]);
+                IWebElement cLocalsc = rUtils.GetCommentsTextParent(cPath, selectedComments[i]);
                 string t = rUtils.GetCommentText(cLocalsc, true);
 
                 Debug.WriteLine(t);
@@ -207,18 +241,15 @@ namespace ProjectCarrot
         private static void ReadCommentAndTakeScreenshot(IWebElement selectedComment, int id, string cPath, int commentIndex, out string text)
         {
             Base.ScrollToElement(selectedComment);
-            //Thread.Sleep(1000);
 
-            IWebElement cLocal = GetCommentsTextParent(cPath, id);
+            IWebElement cLocal = rUtils.GetCommentsTextParent(cPath, id);
 
             string t = rUtils.GetCommentText(cLocal, true);
 
-            TakeScreenshot(selectedComment, $"{FileNames.commentName}-{commentIndex}", 10);
+            rUtils.TakeScreenshot(selectedComment, $"{FileNames.commentName}-{commentIndex}", 10);
             TextReader.ReadText(t, $"{FileNames.commentAudio}-{commentIndex}", Settings.speechType, out text);
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
         }
-
-        private static IWebElement GetCommentsTextParent(string cPath, int i) => rUtils.GetElementOnCommentLocalPath(cPath, i + 1, AskRedditXPaths.commentLocal);
 
         private static List<int> GetSuitableComments(ReadOnlyCollection<IWebElement> comments, string cPath)
         {
@@ -232,13 +263,14 @@ namespace ProjectCarrot
                 if (!rUtils.CommentIsSuitable(cPath, i)) continue;
 
                 //IWebElement textParent = GetCommentsTextParent(cPath, i);
-                string cText = rUtils.GetCommentText(GetCommentsTextParent(cPath, i));
+                string cText = rUtils.GetCommentText(rUtils.GetCommentsTextParent(cPath, i));
 
                 if (cText.Length == 0) continue; // comment was propably removed by moderator
 
                 int wCount = TextUtils.GetWordCount(cText);
 
                 if (wCount > Settings.maxWordCountPerComment) continue;
+                if (wCount < Settings.minWordCountPerComment) continue;
                 if (cText.Length > Settings.maxCharsCountPerComment) continue;
 
                 if (suitableComments.Count + 1 > Settings.maxCommentCountPerVideo) break;
@@ -286,12 +318,10 @@ namespace ProjectCarrot
             Base.ClickElement(AskRedditXPaths.finalLoginButton);
         }
 
-        private static string GetPostPath(int sPost) => $"{AskRedditXPaths.posts}[{sPost}]";
-
         private static void OpenPost_(int sPost)
         {
             //string path = AskRedditXPaths.posts + $"[{sPost}]/{AskRedditXPaths.openPostButton_local}";
-            string path = $"{GetPostPath(sPost)}/{AskRedditXPaths.openPostButton_local}";
+            string path = $"{rUtils.GetPostPath(sPost)}/{AskRedditXPaths.openPostButton_local}";
 
             Debug.WriteLine($"Opening post ({sPost}) at path ({path})");
 
@@ -314,99 +344,8 @@ namespace ProjectCarrot
             settings.Click();
         }
 
-        public static void TakeScreenshot(IWebElement element, string name, int x)
-        {
-            string fullName = $"{name}.png";
-            string fileName = @$"{Paths.filesPath}{fullName}";
-
-            byte[] byteArray = ((ITakesScreenshot)driver).GetScreenshot().AsByteArray;
-            Rectangle croppedImage = new Rectangle(element.Location.X - x / 2, element.Location.Y - x / 2, element.Size.Width + x, element.Size.Height + x);
-
-            Bitmap screenshot = new Bitmap(new MemoryStream(byteArray));
-
-            screenshot = screenshot.Clone(croppedImage, screenshot.PixelFormat);
-
-            screenshot.Save(String.Format(fileName, ImageFormat.Png));
-        }
-
         public static void OpenReddit() => driver.SwitchTo().Window(driver.WindowHandles.Last());
         public static void OpenReader() => driver.SwitchTo().Window(driver.WindowHandles.First());
-
-        // ---- Audio files handler ----
-        public static List<string> targetnames = new List<string>();
-
-        private static void TryRenameAudioFiles()
-        {
-            Debug.WriteLine("Renaming audiofiles:");
-            for (int i = 0; i < targetnames.Count; i++) Debug.WriteLine($"target name {i}: {targetnames[i]}");
-
-            VideoEditor.CreateSpecialFolder();
-
-            string[] files = Directory.GetFiles(Paths.filesPath);
-
-            int cNameIndex = 0;
-
-            List<FileInfo> audioFiles = new List<FileInfo>();
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                FileInfo fileInfo = new FileInfo(files[i]);
-
-                if (fileInfo.Name.StartsWith("ttsMP3.com_") || fileInfo.Name.StartsWith("mp3-output-ttsfree"))
-                {
-                    audioFiles.Add(fileInfo);
-                }
-            }
-
-            int n = audioFiles.Count;
-            bool swapped;
-            do
-            {
-                swapped = false;
-                for (int i = 1; i < n; i++)
-                {
-                    if (audioFiles[i - 1].CreationTime > audioFiles[i].CreationTime)
-                    {
-                        (audioFiles[i], audioFiles[i - 1]) = (audioFiles[i - 1], audioFiles[i]);
-                        swapped = true;
-                    }
-                }
-                n--;
-            } while (swapped);
-
-            for (int i = 0; i < audioFiles.Count; i++)
-            {
-                FileInfo info = audioFiles[i];
-
-                RenameAudioFile(info.FullName, info, ref cNameIndex);
-            }
-
-            targetnames.Clear();
-        }
-
-        private static void RenameAudioFile(string file, FileInfo fileInfo, ref int nameId)
-        {
-            string newPath = file.Remove(file.Length - fileInfo.Name.Length);
-            newPath += targetnames[nameId] + ".mp3";
-            nameId++;
-
-            Debug.WriteLine($"New: {newPath}, previous: {file}");
-
-            fileInfo.MoveTo(newPath);
-        }
-
-        private static bool AllAudiosAreDownloaded()
-        {
-            string[] files = Directory.GetFiles(Paths.filesPath);
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                if (Path.GetExtension(files[i]) == ".crdownload") return false;
-            }
-
-            return true;
-        }
-        // ----
 
         public static void Test()
         {

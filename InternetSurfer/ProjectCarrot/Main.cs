@@ -46,7 +46,7 @@ namespace ProjectCarrot
         /// <summary> Test </summary>
         public static void Button4Click()
         {
-            string text = "At one of my first jobs as a graphic designer, a client called me into his office and pulled up a photo he took. He then asked me if I could turn it around. No, not rotate it, but turn the viewpoint around. He wanted to see what was behind the camera when he originally took the photo…. , God, I have so many stories from that job.  Someone I know argued with me that I do not live anywhere near Canada. He got pretty nasty about it too. , When I showed him proof he said “well I only know Texas”. , I live right outside of Detroit, Michigan. Closer to Canada that I am to any other state. , I have also had a few people argue with me that I do not live in the eastern time zone. I guess they know better than someone who actually lives here.";
+            string text = "";
 
             Debug.WriteLine(TextsManager.GetFixedText(text));
         }
@@ -95,7 +95,7 @@ namespace ProjectCarrot
             return b1 && b2 && !chrome;
         }
 
-        private static bool CanUpload_CheckFiles(string[] files) => files.Length == 0;
+        private static bool CanUpload_CheckFiles(string[] files) { return files.Length == 0; }
 
         private static bool ChromeIsOpened() => GetChromeProcesses().Length > 0;
 

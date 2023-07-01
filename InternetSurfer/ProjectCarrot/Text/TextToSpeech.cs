@@ -122,7 +122,7 @@ namespace ProjectCarrot
 
             Base.ClickElement(Ttsmp3XPaths.downloadButton);
 
-            RedditSurfer.targetnames.Add(fileName);
+            AudioFilesHandler.AddTargetName(fileName);
             RedditSurfer.OpenReddit();
         }
 
@@ -157,7 +157,7 @@ namespace ProjectCarrot
 
             Base.WaitAndClickElement(TtsfreeXPaths.downloadButton); // download
 
-            RedditSurfer.targetnames.Add(fileName);
+            AudioFilesHandler.AddTargetName(fileName);
             RedditSurfer.OpenReddit();
         }
 

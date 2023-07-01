@@ -100,6 +100,8 @@ def GetSubtitles(audio : AudioFileClip, text : str, start : float):
     return result
 
 subtitlesWidth = 800
+fontS = 90
+strokeW = 4
 
 def GetSubtitlesGenerator() -> TextClip:
-    return lambda txt: TextClip(txt, font='Cooper-Black', fontsize=100, stroke_width = 4, stroke_color = "black", color='white', kerning=-2, interline=-1, size = (subtitlesWidth, 1080), method='caption')
+    return lambda txt: TextClip(txt, font='Cooper-Black', fontsize = fontS, stroke_width = strokeW, stroke_color = "black", color='white', kerning=-2, interline=-1, size = (subtitlesWidth, 2000), method='caption')

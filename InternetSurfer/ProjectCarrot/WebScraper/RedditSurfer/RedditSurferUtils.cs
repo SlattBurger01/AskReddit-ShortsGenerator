@@ -1,6 +1,9 @@
 using OpenQA.Selenium;
+using ProjectCarrot.Text;
+using Selenium.Extensions;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using Base = ProjectCarrot.WebScraperBase;
 
 namespace ProjectCarrot
@@ -46,17 +49,47 @@ namespace ProjectCarrot
         /// <returns> found comments </returns>
         public static ReadOnlyCollection<IWebElement> GetComments(out string cPath)
         {
-            cPath = AskRedditXPaths.comments_5;
-            ReadOnlyCollection<IWebElement> comments = Base.GetElements_X(cPath);
+            ReadOnlyCollection<IWebElement> comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_4);
 
             if (comments.Count == 0)
             {
-                cPath = AskRedditXPaths.comments_6;
-                comments = Base.GetElements_X(cPath);
+                //cPath = AskRedditXPaths.comments_5;
+                comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_5);
+
+                if (comments.Count == 0)
+                {
+                    //cPath = AskRedditXPaths.comments_6;
+                    comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_6);
+                }
             }
 
             return comments;
         }
+
+        /// <returns> If comments were loaded (25) or waited more than 4 secs, but found at least one (true), otherwise if comments were not (at least 1) loaded in 1 second or waited longer than 'Base' allows</returns>
+        public static bool WaitForCommentsToLoad(out ReadOnlyCollection<IWebElement> comments, out string cPath)
+        {
+            float elapsedTime = 0;
+
+            while (true)
+            {
+                comments = GetComments(out cPath);
+
+                //Debug.WriteLine($"{comments.Count()} ({cPath})");
+
+                if (elapsedTime >= 4000 && comments.Count < 25) return comments.Count >= 1;
+                if (elapsedTime >= 1000 && comments.Count < 1) return false;
+
+                if (comments.Count >= 25) return true;
+
+                Thread.Sleep(Base.waitPause);
+                elapsedTime += 50;
+
+                if (elapsedTime > Base.maxWaitTime) return false;
+            }
+        }
+
+        public static IWebElement GetCommentsTextParent(string cPath, int i) => GetElementOnCommentLocalPath(cPath, i + 1, AskRedditXPaths.commentLocal);
 
         private static readonly int baseLength = "padding-left: ".Length;
 
@@ -114,7 +147,7 @@ namespace ProjectCarrot
             return TextUtils.RemoveHyperlinks(t);
         }
 
-        /// <returns> if comment can be used for video </returns>
+        /// <returns> if comment can be used for video (not mod comment & not too big & not a reply) </returns>
         public static bool CommentIsSuitable(string cPath, int i)
         {
             if (i == 0) // bot comments should be the first (maybye - I hope)
@@ -130,6 +163,25 @@ namespace ProjectCarrot
 
             return true;
         }
+
+        /// <summary> Takes screenshot of 'element' and saves it under 'Paths.filesPath' as 'name'.png </summary>
+        /// <param name="x"> Offset in x direction (horizontal) </param>
+        public static void TakeScreenshot(IWebElement element, string name, int x)
+        {
+            string fullName = $"{name}.png";
+            string fileName = @$"{Paths.filesPath}{fullName}";
+
+            byte[] byteArray = ((ITakesScreenshot)RedditSurfer.driver).GetScreenshot().AsByteArray;
+            Rectangle croppedImage = new Rectangle(element.Location.X - x / 2, element.Location.Y - x / 2, element.Size.Width + x, element.Size.Height + x);
+
+            Bitmap screenshot = new Bitmap(new MemoryStream(byteArray));
+
+            screenshot = screenshot.Clone(croppedImage, screenshot.PixelFormat);
+
+            screenshot.Save(String.Format(fileName, ImageFormat.Png));
+        }
+
+        public static string GetPostPath(int sPost) => $"{AskRedditXPaths.posts}[{sPost}]";
 
         public static IWebElement GetElementOnCommentLocalPath(string cPath, int id, string path) => Base.GetElement_X($"{CommentPath(cPath, id)}/{path}");
         public static IWebElement? TryGetElementOnCommentLocalPath(string cPath, int id, string path) => Base.TryGetElement($"{CommentPath(cPath, id)}/{path}");

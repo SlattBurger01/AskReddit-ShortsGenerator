@@ -4,6 +4,8 @@ namespace ProjectCarrot
 
     public static class Settings
     {
+        public static readonly Size browserSize = new Size(660, 1080);
+
         // for "Create" and "Upload" option
         public static readonly SessionSettings defaultSettings = new SessionSettings("def", 2, RedditUrls.AskReddit, ChromePersons.person2, new UploadPlatforms(1, 1, 0));
 
@@ -23,6 +25,8 @@ namespace ProjectCarrot
         public static readonly bool loginToTtsFree = true;
 
         public static readonly int maxWordCountPerComment = int.MaxValue;
+        public static readonly int minWordCountPerComment = 1;
+
         public static readonly int maxCharsCountPerComment = 2000;
 
         public static readonly int targetCommentMinWordCount = 25; // if no comment like this was found: this option will be ignored

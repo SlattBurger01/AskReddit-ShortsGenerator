@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace ProjectCarrot
 {
     public static class Ttsmp3XPaths
@@ -31,12 +33,15 @@ namespace ProjectCarrot
         private static bool loggedIn => Settings.loginToReddit;
 
         public static string posts => loggedIn ? posts_L : posts_N;
+
+        /// <summary> Comment header (question) for screenshots (after post was opened) </summary>
         public static string post => loggedIn ? post_L : post_N; // whole post for screenshot
         public static string postHeader => loggedIn ? header_L : header_N;
 
         public static string settings => loggedIn ? settings_L : settings_N;
         public static string darkMode => loggedIn ? darkMode_L : darkMode_N;
 
+        public static string? comments_4 => loggedIn ? comments_4_L : null;
         public static string comments_5 => loggedIn ? comments_5_L : comments_5_N;
         public static string comments_6 => loggedIn ? comments_6_L : comments_6_N;
 
@@ -93,6 +98,7 @@ namespace ProjectCarrot
         private static readonly string darkMode_L = "/html/body/div[30]/div/div/div[4]/button";
 
         // comments
+        public static readonly string comments_4_L = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/div/div/div/div";
         private static readonly string comments_5_L = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[5]/div/div/div/div";
         private static readonly string comments_6_L = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[6]/div/div/div/div";
     }
