@@ -46,9 +46,14 @@ namespace ProjectCarrot
         /// <summary> Test </summary>
         public static void Button4Click()
         {
-            string text = "";
+            string text = "s     ";
 
-            Debug.WriteLine(TextsManager.GetFixedText(text));
+            while (text.Last() == ' ')
+            {
+                text = text.Substring(0, text.Length - 1);
+            }
+
+            Debug.WriteLine(text);
         }
 
 
@@ -69,8 +74,8 @@ namespace ProjectCarrot
 
         private static bool CanContinue(bool create)
         {
-            string[] files1 = Directory.GetFiles(Paths.filesPath);
-            string[] files2 = Directory.GetFiles(Paths.completedVideosFolder);
+            string[] files1 = Directory.GetFiles(LocalPaths.filesPath);
+            string[] files2 = Directory.GetFiles(LocalPaths.completedVideosFolder);
 
             if (second)
             {

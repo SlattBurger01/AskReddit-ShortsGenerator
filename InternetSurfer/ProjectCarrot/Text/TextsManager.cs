@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
+using System.Linq;
 
 namespace ProjectCarrot
 {
@@ -11,16 +11,27 @@ namespace ProjectCarrot
         {
             string fText_ = text.Replace('"'.ToString(), string.Empty); // so it does not mess up args for python text to speech
 
-            string fText = Regex.Replace(fText_, @"\p{Cs}", "");
+            string fText = Regex.Replace(fText_, @"\p{Cs}", ""); // Removes emojis from text
 
-            return ReduceDots(ExplicitWordHandler.ReplaceExplicitWords(fText));
+            fText = ReduceDots(fText); // Reduce them before spaces are added
+
+            fText = AddSpacesAfterDots(fText);
+
+            return ExplicitWordHandler.ReplaceExplicitWords(fText);
         }
 
         private static string ReduceDots(string text) => ReduceChar(text, '.');
 
-        private static string ReduceChar(string s, char ch)
+        private static string ReduceChar(string s, char ch) => Regex.Replace(s, @$"\{ch}+", $"{ch}");
+
+        public static string AddSpacesAfterDots(string input)
         {
-            return Regex.Replace(s, @$"\{ch}+", $"{ch}");
+            string pattern = @"\.(?! )";
+            string replacement = ". ";
+
+            string output = Regex.Replace(input, pattern, replacement);
+
+            return output;
         }
     }
 

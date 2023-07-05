@@ -1,6 +1,8 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Security.Policy;
 
 namespace ProjectCarrot
 {
@@ -8,8 +10,9 @@ namespace ProjectCarrot
     {
         public static IWebDriver driver; // set once on setup
 
-        public static readonly int waitPause = 50; // in ms
-        public static readonly int maxWaitTime = 5_000; // in ms
+        public const int waitPause = 50; // in ms
+        public const int maxWaitTime = 5000; // in ms
+        public static readonly int maxUploadInterWaitTime = 600000; // in ms, used for wait times that relies on converting or uploading stuff
 
         /// <returns> Default chrome options </returns>
         public static ChromeOptions GetDefaultOptions()
@@ -22,7 +25,7 @@ namespace ProjectCarrot
             options.AddExcludedArgument("enable-automation");
             options.AddAdditionalOption("useAutomationExtension", false);
 
-            options.AddUserProfilePreference("download.default_directory", Paths.filesPath);
+            options.AddUserProfilePreference("download.default_directory", LocalPaths.filesPath);
 
             return options;
         }
@@ -40,9 +43,9 @@ namespace ProjectCarrot
         public static ReadOnlyCollection<IWebElement> GetElements_X(string xPath) => driver.FindElements(By.XPath(xPath));
 
         /// <summary> Clicks element on target path, if error is thrown --> it will be ignored </summary>
-        public static void TryClickElement(string xPath)
+        public static bool TryClickElement(string xPath)
         {
-            try { ClickElement(xPath); } catch { }
+            try { ClickElement(xPath); return true; } catch { return false; }
         }
 
         /// <returns> If element exists </returns>
@@ -62,28 +65,85 @@ namespace ProjectCarrot
             catch { return null; }
         }
 
-        /// <summary> Waits for element and clicks it </summary>
-        public static void WaitAndClickElement(string xPath)
+        /// <summary> Waits for element (to exists and be clickable) and clicks it </summary>
+        public static void WaitAndClickElement(string xPath, int maxWaitTime_ = maxWaitTime)
         {
-            IWebElement? e = WaitForElement(xPath);
+            IWebElement? e = WaitForElement(xPath, maxWaitTime_);
 
             if (e == null) throw new NullReferenceException("Element was not found!");
-            else e.Click();
+            else WaitForElementBeClickableAndClick(e);
         }
 
-        /// <summary> Waits until element exists (on path) or until it max wait time is exeeded </summary>
-        public static IWebElement? WaitForElement(string xPath)
+        /// <summary> Waits until element is clickable and clics it </summary>
+        public static void WaitForElementBeClickableAndClick(string xPath, int maxWaitTime_ = maxWaitTime) => WaitForElementBeClickableAndClick(GetElement_X(xPath), maxWaitTime_);
+
+        /// <summary> Waits until element is clickable and clics it </summary>
+        public static void WaitForElementBeClickableAndClick(IWebElement element, int maxWaitTime_ = maxWaitTime)
+        {
+            bool b = WaitForElementBeClickable(element, maxWaitTime_);
+
+            if (b) element.Click();
+        }
+
+        /// <summary> Waits until element is clickable </summary>
+        public static bool WaitForElementBeClickable(string xPath, int maxWaitTime_ = maxWaitTime) => WaitForElementBeClickable(GetElement_X(xPath), maxWaitTime_);
+
+        /// <summary> Waits until element is clickable </summary>
+        public static bool WaitForElementBeClickable(IWebElement element, int maxWaitTime_ = maxWaitTime)
         {
             int elapsed = 0; // in ms
 
             while (true)
             {
-                if (ElementExists(xPath, out IWebElement? e)) return e;
+                bool isClickable = element.Displayed && element.Enabled;
+
+                if (isClickable) return true;
 
                 Thread.Sleep(waitPause);
                 elapsed += waitPause;
 
-                if (elapsed >= maxWaitTime) return null;
+                if (elapsed >= maxWaitTime_) return false;
+            }
+        }
+
+        /// <summary> Waits until element exists and send 'keys' </summary>
+        public static void WaitAndSendKeysToElement(string xPath, string keys, int maxWaitTime_ = maxWaitTime)
+        {
+            IWebElement? e = WaitForElement(xPath, maxWaitTime_);
+
+            if (e == null) throw new NullReferenceException("Element was not found!");
+            else e.SendKeys(keys);
+        }
+
+        /// <summary> Waits until element exists (on path) or until it max wait time is exeeded </summary>
+        public static IWebElement? WaitForElement(string xPath, int maxWaitTime_ = maxWaitTime)
+        {
+            Debug.WriteLine($"Waiting for element (max = {maxWaitTime_ / 1000}s)");
+
+            int elapsed = 0; // in ms
+
+            while (elapsed < maxWaitTime_)
+            {
+                if (ElementExists(xPath, out IWebElement? e)) return e;
+
+                Thread.Sleep(waitPause);
+                elapsed += waitPause;
+            }
+
+            return null;
+        }
+
+        /// <summary> Waits until element disappears (on path) or until it max wait time is exeeded </summary>
+        public static void WaitForElementDisappear(string xPath, int maxWaitTime_ = maxWaitTime)
+        {
+            int elapsed = 0;
+
+            while (ElementExists(xPath))
+            {
+                Thread.Sleep(50);
+                elapsed += 50;
+
+                if (elapsed >= maxWaitTime_) return;
             }
         }
 
@@ -109,6 +169,12 @@ namespace ProjectCarrot
         public static void ScrollToTop()
         {
             ((IJavaScriptExecutor)driver).ExecuteScript("window.scrollTo(0, 0);");
+        }
+
+        public static void OpenUrlInNewWindow(string url)
+        {
+            driver.SwitchTo().NewWindow(WindowType.Tab);
+            driver.Navigate().GoToUrl(url);
         }
     }
 }

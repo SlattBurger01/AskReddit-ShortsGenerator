@@ -6,8 +6,12 @@ from moviepy.editor import *
 
 def GetComments() -> tuple[list, list]:
     """ Returns tuple of sorted (commentImagePaths, commentAudioPaths) lists """
+
     comments = glob.glob(f"{Paths.contentGeneratorFolder}\*.png")
     audios = glob.glob(f"{Paths.contentGeneratorFolder}\*.mp3")
+
+    if (len(audios) == 0):
+        audios = glob.glob(f"{Paths.contentGeneratorFolder}\*.m4a")
 
     sortedCommentsH = GetSortedComments_(comments)
     sortedCommentsA = GetSortedComments_(audios)
@@ -16,7 +20,7 @@ def GetComments() -> tuple[list, list]:
 
     return (sortedCommentsH, sortedCommentsA)
 
-def GetSortedComments_(comments) -> list:
+def GetSortedComments_(comments : list) -> list:
     """ Returns list of sorted comments, "comments" is list of comment paths """
 
     sortedComments = []
@@ -26,14 +30,14 @@ def GetSortedComments_(comments) -> list:
     for x in comments:
 
         for comment in comments:
-            if(x == comment):
+            if (x == comment):
                 continue
 
-            if(comment.__contains__("comment")):                
+            if (comment.__contains__("comment")):                
                 v = comment[29] # this will fuck up everything if any path is changed xDDD
                 print(f"Comment {v}")
 
-                if(v == f"{cPosition}"):
+                if (v == f"{cPosition}"):
                     sortedComments.append(comment)
                     cPosition += 1
 

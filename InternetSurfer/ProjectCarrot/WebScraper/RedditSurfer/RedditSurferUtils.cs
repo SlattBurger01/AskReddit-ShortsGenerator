@@ -51,14 +51,12 @@ namespace ProjectCarrot
         {
             ReadOnlyCollection<IWebElement> comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_4);
 
-            if (comments.Count == 0)
+            if (comments.Count < 2) // at least 2 so another element can't be seen as comment
             {
-                //cPath = AskRedditXPaths.comments_5;
                 comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_5);
 
-                if (comments.Count == 0)
+                if (comments.Count < 2)
                 {
-                    //cPath = AskRedditXPaths.comments_6;
                     comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_6);
                 }
             }
@@ -66,7 +64,7 @@ namespace ProjectCarrot
             return comments;
         }
 
-        /// <returns> If comments were loaded (25) or waited more than 4 secs, but found at least one (true), otherwise if comments were not (at least 1) loaded in 1 second or waited longer than 'Base' allows</returns>
+        /// <returns> If comments were loaded (25) or waited more than 4 secs, but found at least two (true), otherwise if comments were not (at least 2) loaded in 1 second or waited longer than 'Base' allows</returns>
         public static bool WaitForCommentsToLoad(out ReadOnlyCollection<IWebElement> comments, out string cPath)
         {
             float elapsedTime = 0;
@@ -77,8 +75,8 @@ namespace ProjectCarrot
 
                 //Debug.WriteLine($"{comments.Count()} ({cPath})");
 
-                if (elapsedTime >= 4000 && comments.Count < 25) return comments.Count >= 1;
-                if (elapsedTime >= 1000 && comments.Count < 1) return false;
+                if (elapsedTime >= 4000 && comments.Count < 25) return comments.Count >= 2;
+                if (elapsedTime >= 1000 && comments.Count < 2) return false;
 
                 if (comments.Count >= 25) return true;
 
@@ -135,31 +133,41 @@ namespace ProjectCarrot
 
             for (int i = 0; i < paragraphs.Count; i++)
             {
+                string space = i != paragraphs.Count - 1 ? " " : "";
+
                 if (includePauses)
                 {
-                    string lPause = i == paragraphs.Count - 1 ? "" : RedditSurfer.linePause;
+                    string text = paragraphs[i].Text;
 
-                    t += $"{paragraphs[i].Text} {lPause} ";
+                    //Debug.WriteLine($"Getting comment text: {text} ({i})");
+
+                    bool addPause = i != paragraphs.Count - 1 && paragraphs[i].Text.Last() != '.';
+
+                    string lPause = addPause ? RedditSurfer.linePause : "";
+
+                    t += $"{paragraphs[i].Text}{lPause}{space}";
                 }
-                else t += $"{paragraphs[i].Text}";
+                else t += $"{paragraphs[i].Text}{space}";
             }
 
             return TextUtils.RemoveHyperlinks(t);
         }
 
         /// <returns> if comment can be used for video (not mod comment & not too big & not a reply) </returns>
-        public static bool CommentIsSuitable(string cPath, int i)
+        public static bool CommentIsSuitable(string cPath, int i, out IWebElement? commentPos)
         {
+            commentPos = null;
+
             if (i == 0) // bot comments should be the first (maybye - I hope)
             {
                 if (IsModeratorComment(cPath, i + 1)) return false;
             }
 
-            IWebElement e = GetElementOnCommentLocalPath(cPath, i + 1, AskRedditXPaths.commentPosition);
+            commentPos = GetElementOnCommentLocalPath(cPath, i + 1, AskRedditXPaths.commentPosition);
 
-            if (e.Size.Height > 750) return false; // comment is too big and wouldn't fit into the screenshot
+            //if (commentPos.Size.Height > Settings.maxCommentHeight) return false; // comment is too big and wouldn't fit into the screenshot - moved into ReditSurfer.ts
 
-            if (GetCommentLayer(e) != 0) return false; // if comment is a reply to another post
+            if (GetCommentLayer(commentPos) != 0) return false; // if comment is a reply to another post
 
             return true;
         }
@@ -169,7 +177,7 @@ namespace ProjectCarrot
         public static void TakeScreenshot(IWebElement element, string name, int x)
         {
             string fullName = $"{name}.png";
-            string fileName = @$"{Paths.filesPath}{fullName}";
+            string fileName = @$"{LocalPaths.filesPath}{fullName}";
 
             byte[] byteArray = ((ITakesScreenshot)RedditSurfer.driver).GetScreenshot().AsByteArray;
             Rectangle croppedImage = new Rectangle(element.Location.X - x / 2, element.Location.Y - x / 2, element.Size.Width + x, element.Size.Height + x);
@@ -181,9 +189,28 @@ namespace ProjectCarrot
             screenshot.Save(String.Format(fileName, ImageFormat.Png));
         }
 
-        public static string GetPostPath(int sPost) => $"{AskRedditXPaths.posts}[{sPost}]";
+        /// <returns> Path of posts of 'id' </returns>
+        public static string GetPostPath(int id) => $"{AskRedditXPaths.posts}[{id}]";
 
+        /// <returns> Returns element on local path under comment on 'cPath' with 'id' </returns>
         public static IWebElement GetElementOnCommentLocalPath(string cPath, int id, string path) => Base.GetElement_X($"{CommentPath(cPath, id)}/{path}");
+
+        /// <returns> Returns element on local path under comment on 'cPath' with 'id' (if exists) </returns>
         public static IWebElement? TryGetElementOnCommentLocalPath(string cPath, int id, string path) => Base.TryGetElement($"{CommentPath(cPath, id)}/{path}");
+
+        /// <summary> Logins to reddit :) </summary>
+        public static void LoginToReddit()
+        {
+            if (!Base.TryClickElement(AskRedditXPaths.loginButton_old)) Base.ClickElement(AskRedditXPaths.loginButton_new);
+
+            Base.WaitForElement(AskRedditXPaths.loginIFrame);
+
+            RedditSurfer.driver.SwitchTo().Frame(0);
+
+            Base.SendKeysToElement(AskRedditXPaths.usernameInput, LogingData.userNameReddit);
+            Base.SendKeysToElement(AskRedditXPaths.passwordInput, LogingData.password);
+
+            Base.ClickElement(AskRedditXPaths.finalLoginButton);
+        }
     }
 }

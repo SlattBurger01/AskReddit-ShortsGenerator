@@ -12,7 +12,7 @@ namespace ProjectCarrot
         public static string SpecialFolder => specialFolder;
 
         private static readonly string specialFolder = CreateSpecialFolderName();
-        private static readonly string usedFolder = $@"{Paths.filesPath}\Used\{specialFolder}";
+        private static readonly string usedFolder = $@"{LocalPaths.filesPath}\Used\{specialFolder}";
 
         private static string CreateSpecialFolderName()
         {
@@ -20,7 +20,7 @@ namespace ProjectCarrot
 
             Random r = new Random();
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 20; i++)
             {
                 n += chars[r.Next(0, chars.Length)];
             }
@@ -32,45 +32,45 @@ namespace ProjectCarrot
 
         public static void CreateSpecialFolder()
         {
-            Directory.CreateDirectory($@"{Paths.filesPath}Used\{specialFolder}");
+            Directory.CreateDirectory($@"{LocalPaths.filesPath}Used\{specialFolder}");
 
             Debug.WriteLine($"Special folder created ({specialFolder})");
         }
 
         public static void ClearCommentsText() { commentsText = ""; }
 
-        public static string commentsText = "";
+        private static string commentsText = "";
 
+        /// <summary> Adds text 't' into 'commentsText', trims end and adds dot if necessary </summary>
+        public static void AddCommentText(string t)
+        {
+            commentsText += $"{t} ";
+
+            commentsText = commentsText.TrimEnd();
+
+            if (commentsText.Last() != '.') commentsText += ". ";
+        }
+
+        /// <summary> Edits video based on downloaded files and moves / deletes them </summary>
         public static void EditVideo(int videoIdentifier, string sessionName, SessionSettings settings)
         {
             string result = "";
 
-            char s = '"';
-
-            if (Settings.renderVideo) result = CallVideoEditorPythonFile($"{sessionName}_{videoIdentifier} {true} {s}{commentsText}{s}");
+            if (Settings.renderVideo) result = CallVideoEditorPythonFile($"{sessionName}_{videoIdentifier} {true} \"{commentsText}\"");
 
             Debug.WriteLine(result);
 
             MoveUsedResources(videoIdentifier, settings);
         }
 
-        private static string CallVideoEditorPythonFile(string args) => PythonHelper.CallPythonFile(Paths.videoEditorPath, args);
+        private static string CallVideoEditorPythonFile(string args) => PythonHelper.CallPythonFile(LocalPaths.videoEditorPath, args);
 
         private static void MoveUsedResources(int videoIdentifier, SessionSettings settings)
         {
-            var s = Directory.GetFiles(Paths.filesPath);
+            string[] files = Directory.GetFiles(LocalPaths.filesPath);
 
-            for (int i = 0; i < s.Length; i++)
-            {
-                Debug.WriteLine(s[i]);
-            }
-
-            VideoUploader.MoveFilesToFolder(s, new DirectoryInfo(usedFolder), $"_{videoIdentifier}_{settings.sessionName}");
-        }
-
-        public static void Test()
-        {
-
+            if (Settings.deleteFilesAfterUsed) LocalFilesHandler.DeleteFiles(files);
+            else LocalFilesHandler.MoveFilesToFolder(files, new DirectoryInfo(usedFolder), $"_{videoIdentifier}_{settings.sessionName}");
         }
     }
 }

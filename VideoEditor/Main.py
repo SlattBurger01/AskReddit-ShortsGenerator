@@ -9,14 +9,18 @@ from moviepy.video.tools.subtitles import SubtitlesClip
 
 try: # called via c# file
     videoIdentifier = sys.argv[1]  # at position 0 is file name
-    enableSubs = sys.argv[2]
+    enableSubsS = sys.argv[2]
     videoText = sys.argv[3]
 except: # called via visual studio code
     videoIdentifier = "test_128"
-    enableSubs = True
+    enableSubsS = "True"
     videoText = "I have passed two nude hikers in my 35 years of hiking. One male, one female, years and thousands of miles apart. Both said hello. I said hello. One mentioned the trail was washed out ahead but a second trail has been cut. I thanked them for the heads-up. Some people like the wind and sun on their skin. Both had on hiking boots. To each their own."
 
-print(f"Calling python script id = ({videoIdentifier}) with args: {sys.argv}")
+enableSubs : bool = False
+if(enableSubsS == "True"):
+    enableSubs = True
+
+print(f"Calling python script id = ({videoIdentifier}), generating subs: {enableSubs}, with args: {sys.argv}")
 
 image1 = ImageClip(f'{Paths.contentGeneratorFolder}\postH.png')
 audio1 = AudioFileClip(f'{Paths.contentGeneratorFolder}\postA.mp3')
@@ -37,17 +41,21 @@ def EditVideo(commentData):
     finalAudios : list[AudioClip] = [a1]
     finalVideos : list[VideoClip] = [i1]
 
+    print("1")
+
     audioDuration = a1.duration + firstPause
 
     recentAudio = None
 
-    for i in range(len(images)):
+    for i in range(len(audios)):
         bAudio = a1
         if(i != 0):
             bAudio = recentAudio
 
         audio = AudioFileClip(audios[i])
-        image = ImageClip(images[i])
+
+        if(len(images) != 0):
+            image = ImageClip(images[i])
 
         # pause is included in "NextImageStart" !!!
         a = Utils.GetAudio(audio, NextImageStart(bAudio))
@@ -74,6 +82,7 @@ def EditVideo(commentData):
         subtitles : SubtitlesClip = SubtitlesGenerator.GetSubtitles(finalAudioClip, videoText, a1.duration + pause)
         finalVideos.append(subtitles.set_duration(videoDuration))
 
+        print("Logging subtitles: ")
         for x in subtitles.subtitles:
             print(x)
 

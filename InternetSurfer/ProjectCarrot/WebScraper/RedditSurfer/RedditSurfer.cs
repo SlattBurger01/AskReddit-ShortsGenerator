@@ -1,6 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.DevTools.V111.Audits;
+using OpenQA.Selenium.DevTools.V113.FedCm;
 using ProjectCarrot.Text;
 using Selenium.Extensions;
 using System.Collections.Generic;
@@ -26,17 +27,6 @@ namespace ProjectCarrot
 
             SetupReaderPage();
             SetupRedditPage(Url);
-
-            //Thread.Sleep(2000); // wait for reddit to load enough posts
-
-            /*while (true)
-            {
-                ReadOnlyCollection<IWebElement> posts = Base.GetElements_X(AskRedditXPaths.posts);
-
-                if (posts.Count > 2) break; // two should be enough for some time (rest should load up while working with these comments)
-
-                Thread.Sleep(50);
-            }*/
 
             WaitForPostsLoad();
 
@@ -71,7 +61,7 @@ namespace ProjectCarrot
             options.AddUserProfilePreference("profile.password_manager_enabled", false);
             options.AddArgument("mute-audio");
 
-            if (installAddblock) options.AddExtension(Paths.addBlockPath);
+            if (installAddblock) options.AddExtension(LocalPaths.adAwayAddBlock);
 
             driver = new ChromeDriver(options);
             Base.driver = driver;
@@ -191,18 +181,7 @@ namespace ProjectCarrot
                 rUtils.WaitForCommentsToLoad(out comments, out cPath);
             }
 
-            /*ReadOnlyCollection<IWebElement> comments = rUtils.GetComments(out string cPath);
-
-            while (comments.Count == 0)
-            {
-                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton_1);
-                Base.TryClickElement(AskRedditXPaths.notLoadedComments_RetryButton_2);
-                Thread.Sleep(100);
-
-                comments = rUtils.GetComments(out cPath);
-            }*/
-
-            Debug.WriteLine($"Last: {comments.Last().Text}, path = {cPath}");
+            Debug.WriteLine($"Comments found on {cPath} (last: {comments.Last().Text})");
 
             List<int> selectedComments = GetSuitableComments(comments, cPath);
 
@@ -218,17 +197,19 @@ namespace ProjectCarrot
 
             int currentWordCount = 0;
 
+            bool takeSrc = selectedComments.Count > 1;
+
             Debug.WriteLine($"Comments ({selectedComments.Count})");
 
             for (int i = 0; i < selectedComments.Count; i++)
             {
                 int id = selectedComments[i];
 
-                ReadCommentAndTakeScreenshot(comments[id], id, cPath, i, out string t);
+                ReadCommentAndTakeScreenshot(comments[id], id, cPath, i, takeSrc, out string t);
 
                 currentWordCount += TextUtils.GetWordCount(t);
 
-                VideoEditor.commentsText += t;
+                VideoEditor.AddCommentText(t);
 
                 Debug.WriteLine($"comment: {i}, {t}");
                 Debug.WriteLine($"comment: {TextUtils.GetWordCount(t)}, {currentWordCount}");
@@ -238,7 +219,7 @@ namespace ProjectCarrot
             }
         }
 
-        private static void ReadCommentAndTakeScreenshot(IWebElement selectedComment, int id, string cPath, int commentIndex, out string text)
+        private static void ReadCommentAndTakeScreenshot(IWebElement selectedComment, int id, string cPath, int commentIndex, bool takeScreenshot, out string text)
         {
             Base.ScrollToElement(selectedComment);
 
@@ -246,9 +227,8 @@ namespace ProjectCarrot
 
             string t = rUtils.GetCommentText(cLocal, true);
 
-            rUtils.TakeScreenshot(selectedComment, $"{FileNames.commentName}-{commentIndex}", 10);
+            if (takeScreenshot) rUtils.TakeScreenshot(selectedComment, $"{FileNames.commentName}-{commentIndex}", 10);
             TextReader.ReadText(t, $"{FileNames.commentAudio}-{commentIndex}", Settings.speechType, out text);
-            //Thread.Sleep(500);
         }
 
         private static List<int> GetSuitableComments(ReadOnlyCollection<IWebElement> comments, string cPath)
@@ -256,25 +236,40 @@ namespace ProjectCarrot
             List<int> targetComments = new List<int>();
             List<int> suitableComments = new List<int>();
 
-            int totalWordCount = 0;
+            int totalWordCount = 0; // if single comment mode triggered: comment char count
+
+            bool singleComment_ = false;
 
             for (int i = 0; i < comments.Count; i++)
             {
-                if (!rUtils.CommentIsSuitable(cPath, i)) continue;
+                if (!rUtils.CommentIsSuitable(cPath, i, out IWebElement? e)) continue;
 
-                //IWebElement textParent = GetCommentsTextParent(cPath, i);
                 string cText = rUtils.GetCommentText(rUtils.GetCommentsTextParent(cPath, i));
 
                 if (cText.Length == 0) continue; // comment was propably removed by moderator
 
                 int wCount = TextUtils.GetWordCount(cText);
 
-                if (wCount > Settings.maxWordCountPerComment) continue;
-                if (wCount < Settings.minWordCountPerComment) continue;
-                if (cText.Length > Settings.maxCharsCountPerComment) continue;
+                if (Settings_1(wCount, cText)) continue;
 
-                if (suitableComments.Count + 1 > Settings.maxCommentCountPerVideo) break;
-                if (totalWordCount + wCount > Settings.maxWordCountPerVideo) break;
+                if (!singleComment_)
+                {
+                    singleComment_ = e.Size.Height > Settings.maxCommentHeight || cText.Length > Settings.minCharsForSingleComment;
+                }
+
+                if (singleComment_) // longer than something ---> one comment per video is triggered
+                {
+                    if (cText.Length < totalWordCount) continue;
+
+                    Debug.WriteLine("Single comment per video triggered!");
+
+                    targetComments = new List<int>() { i }; // don't return (some other comment could be longer)
+                    totalWordCount = cText.Length;
+
+                    continue;
+                }
+
+                if (Settings_2(suitableComments.Count + 1, totalWordCount + wCount)) break;
 
                 Debug.WriteLine($"Comment {i} is suitable ({wCount})");
 
@@ -289,38 +284,40 @@ namespace ProjectCarrot
             return targetComments;
         }
 
+        // to do: rename this function 
+        private static bool Settings_1(int wCount, string cText)
+        {
+            if (wCount > Settings.maxWordCountPerComment) return true;
+            if (wCount < Settings.minWordCountPerComment) return true;
+            if (cText.Length > Settings.maxCharsCountPerComment) return true;
+
+            return false;
+        }
+
+        // to do: rename this function
+        private static bool Settings_2(int suitableCommsCount, int totalWordCount)
+        {
+            if (suitableCommsCount > Settings.maxCommentCountPerVideo) return true;
+            if (totalWordCount > Settings.maxWordCountPerVideo) return true;
+
+            return false;
+        }
+
         private static void SetupReaderPage() => TextReader.SetUpReader(Settings.speechType, driver);
 
-        private static void SetupRedditPage(string Url)
+        private static void SetupRedditPage(string url)
         {
             Debug.WriteLine("Setting up reddit");
 
-            driver.SwitchTo().NewWindow(WindowType.Tab);
-
-            driver.Navigate().GoToUrl(Url);
+            Base.OpenUrlInNewWindow(url);
 
             Base.TryClickElement(AskRedditXPaths.acceptButton);
 
-            if (Settings.loginToReddit) LoginToReddit();
-        }
-
-        private static void LoginToReddit()
-        {
-            Base.ClickElement(AskRedditXPaths.loginButton); 
-
-            Base.WaitForElement(AskRedditXPaths.loginIFrame);
-
-            driver.SwitchTo().Frame(0);
-
-            Base.SendKeysToElement(AskRedditXPaths.usernameInput, LogingData.userNameReddit);
-            Base.SendKeysToElement(AskRedditXPaths.passwordInput, LogingData.password);
-
-            Base.ClickElement(AskRedditXPaths.finalLoginButton);
+            if (Settings.loginToReddit) rUtils.LoginToReddit();
         }
 
         private static void OpenPost_(int sPost)
         {
-            //string path = AskRedditXPaths.posts + $"[{sPost}]/{AskRedditXPaths.openPostButton_local}";
             string path = $"{rUtils.GetPostPath(sPost)}/{AskRedditXPaths.openPostButton_local}";
 
             Debug.WriteLine($"Opening post ({sPost}) at path ({path})");
@@ -346,12 +343,5 @@ namespace ProjectCarrot
 
         public static void OpenReddit() => driver.SwitchTo().Window(driver.WindowHandles.Last());
         public static void OpenReader() => driver.SwitchTo().Window(driver.WindowHandles.First());
-
-        public static void Test()
-        {
-            string v = "That kids reaction broke my heart. Whether it was a \"joke\" or not, he was confused and freaked out but it was an authority figure so he was going to do it, even though all his instincts are telling him to gtfo, he was still gonna do it. Its fucking chilling seeing how quickly someone can go from regular kid to abuse victim.\r\n\r\nETA For the people asking, this is the one that was posted here that I saw. For everyone else I'm sorry.\r\n\r\nhttps://www.reddit.com/r/interestingasfuck/comments/12iekyu/a_weird_video_of_the_dalai_lama_asking_an_indian/?utm_source=share&utm_medium=ios_app&utm_name=iossmf";
-
-            Debug.WriteLine(TextUtils.RemoveHyperlinks(v));
-        }
     }
 }

@@ -20,11 +20,9 @@ namespace ProjectCarrot
         public static readonly string agreeButton = "/html/body/section/div/div/div/div/div[1]/div[1]/form/div[1]/div[3]/div/label/div/ins";
         public static readonly string submitButton = "/html/body/section/div/div/div/div/div[1]/div[1]/form/div[3]/input";
 
-        //public static readonly string downloadButton = "/html/body/section[2]/div[2]/form/div[2]/div[2]/div[3]/div[2]/center[1]/div/a"; // obsolete
         public static readonly string downloadButton = "/html/body/section[2]/div[2]/form/div[2]/div[2]/div[1]/div[4]/div[2]/center[1]/div/a";
         public static readonly string textInput = "/html/body/section[2]/div[2]/form/div[1]/div[1]/div/textarea";
 
-        //public static readonly string converButton = "/html/body/section[2]/div[2]/form/div[2]/div[2]/a"; obsolete
         public static readonly string converButton = "/html/body/section[2]/div[2]/form/div[2]/div[2]/div[1]/a";
     }
 
@@ -41,13 +39,16 @@ namespace ProjectCarrot
         public static string settings => loggedIn ? settings_L : settings_N;
         public static string darkMode => loggedIn ? darkMode_L : darkMode_N;
 
-        public static string? comments_4 => loggedIn ? comments_4_L : null;
+        public static string comments_4 => loggedIn ? comments_4_L : comments_4_N;
         public static string comments_5 => loggedIn ? comments_5_L : comments_5_N;
         public static string comments_6 => loggedIn ? comments_6_L : comments_6_N;
 
         // --- logging in
         public static readonly string loginIFrame = "/html/body/div[1]/div/div[2]/div[3]/div/div/iframe";
-        public static readonly string loginButton = "/html/body/div[1]/div/div[2]/div[1]/header/div/div[2]/div/div[1]/a";
+
+        public static readonly string loginButton_old = "/html/body/div[1]/div/div[2]/div[1]/header/div/div[2]/div/div[1]/a";
+        public static readonly string loginButton_new = "/html/body/shreddit-app/reddit-header-large/header/nav/div[3]/faceplate-tracker[2]/a";
+
         public static readonly string usernameInput = "/html/body/div/main/div[1]/div/div/form/fieldset[1]/input";
         public static readonly string passwordInput = "/html/body/div/main/div[1]/div/div/form/fieldset[2]/input";
         public static readonly string finalLoginButton = "/html/body/div/main/div[1]/div/div/form/fieldset[4]/button";
@@ -67,7 +68,6 @@ namespace ProjectCarrot
         public static readonly string badgeLocal_3 = "div/div/div/div[2]/div[3]/div[1]/span/span[1]/span";
         public static readonly string badgeLocal_4 = "div/div/div/div[2]/div[4]/div[1]/span/span[1]/span";
 
-        //public static readonly string openedPostCloseButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[1]/div/div[2]/button";
         public static readonly string openedPostCloseButton = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[5]/button";
 
         public static readonly string notLoadedComments_RetryButton_1 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/button";
@@ -85,6 +85,7 @@ namespace ProjectCarrot
         private static readonly string darkMode_N = "/html/body/div[30]/div/button[1]";
 
         // comments
+        private static readonly string comments_4_N = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[2]/div[4]/div/div/div/div";
         private static readonly string comments_5_N = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[2]/div[5]/div/div/div/div";
         private static readonly string comments_6_N = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[2]/div[6]/div/div/div/div";
 
@@ -139,11 +140,13 @@ namespace ProjectCarrot
 
     public static class TiktokPaths
     {
-        public static string videoInput = "/html/body/div[1]/div/div/div/div/div/div/div/input";
+        public static readonly string videoInput = "/html/body/div[1]/div/div/div/div/div/div/div/input";
 
-        public static string hashtagRecomendation = "/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div[1]/div[2]";
+        public static readonly string hashtagRecomendation = "/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div[1]/div[2]";
 
-        public static string uploadButton = "//*[@id=\"root\"]/div/div/div/div[2]/div[2]/div[2]/div[7]/div[2]/button";
+        public static readonly string uploadButton = "/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[8]/div[2]/button";
+
+        public static readonly string videoDescriptionInput = "/html/body/div[1]/div/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div[1]/div/div/div";
     }
 
     public static class FileNames
@@ -155,16 +158,15 @@ namespace ProjectCarrot
         public static readonly string commentAudio = "commentA";
     }
 
-    public static class Paths
+    public static class LocalPaths
     {
-        //private static readonly string projectPath = "E:\\HONZA\\InsaneProgramming\\ProjectCarrot"; // old machine
         private static readonly string projectPath = "E:\\OtherProjects\\ProjectCarrot"; // new machine
 
-        //private static readonly string generatedVideosPath = "E:\\HONZA\\ContentGenerator"; // old machine
         private static readonly string generatedVideosPath = "E:\\ContentGenerator"; // new machine
 
-        //public static readonly string addBlockPath = "C:\\Users\\Jan\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 15\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.4.1_0.crx"; // old machine
         public static readonly string addBlockPath = "C:\\Users\\kocna\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1\\Extensions\\gighmmpiobklfepjocnamgkkbiglidom\\5.6.0_0.crx"; // new machine
+
+        public static readonly string adAwayAddBlock = "C:\\Users\\kocna\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1\\Extensions\\dgjbaljgolmlcmmklmmeafecikidmjpi\\1.9.2_0.crx";
 
         public static readonly string pythonPath = "C:\\Users\\kocna\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"; // make sure this path is to actuall python, not just its shortcut
 
@@ -184,6 +186,8 @@ namespace ProjectCarrot
     {
         public static readonly string userNameReddit = "Slatt_270";
         public static readonly string userNameTtsFree = "Slatt";
+        public static readonly string gmailVoiceMaker = "slatt.burger@gmail.com";
+
         public static readonly string password = "QfdlIOp5468sQ&ss";
     }
 

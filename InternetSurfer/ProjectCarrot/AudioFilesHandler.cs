@@ -22,9 +22,7 @@ namespace ProjectCarrot
 
             VideoEditor.CreateSpecialFolder();
 
-            string[] files = Directory.GetFiles(Paths.filesPath);
-
-            int cNameIndex = 0;
+            string[] files = Directory.GetFiles(LocalPaths.filesPath);
 
             // --- Get files
             List<FileInfo> audioFiles = new List<FileInfo>();
@@ -33,7 +31,9 @@ namespace ProjectCarrot
             {
                 FileInfo fileInfo = new FileInfo(files[i]);
 
-                if (fileInfo.Name.StartsWith("ttsMP3.com_") || fileInfo.Name.StartsWith("mp3-output-ttsfree"))
+                //if (fileInfo.Name.StartsWith("ttsMP3.com_") || fileInfo.Name.StartsWith("mp3-output-ttsfree")) audioFiles.Add(fileInfo);
+
+                if (fileInfo.Extension == ".mp3" || fileInfo.Extension == ".m4a")
                 {
                     audioFiles.Add(fileInfo);
                 }
@@ -58,7 +58,9 @@ namespace ProjectCarrot
             } while (swapped);
             // ---
 
-            for (int i = 0; i < audioFiles.Count; i++)
+            int cNameIndex = 0;
+
+            for (int i = 0; i < targetNames.Count; i++) // audiofiles.Count
             {
                 FileInfo info = audioFiles[i];
 
@@ -82,7 +84,7 @@ namespace ProjectCarrot
         /// <returns> If all files in download folder not is being downloaded </returns>
         public static bool AllAudiosAreDownloaded()
         {
-            string[] files = Directory.GetFiles(Paths.filesPath);
+            string[] files = Directory.GetFiles(LocalPaths.filesPath);
 
             for (int i = 0; i < files.Length; i++)
             {

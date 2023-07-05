@@ -1,6 +1,15 @@
+using System.Windows.Forms.VisualStyles;
+
 namespace ProjectCarrot
 {
-    public enum TextToSpeechType { ttsmp3, ttsfree, pyttsx3 }
+    public enum TextToSpeechType 
+    { 
+        ttsmp3,
+        ttsfree,
+        voiceMaker,
+        narakeet, 
+        pyttsx3
+    }
 
     public static class Settings
     {
@@ -36,6 +45,12 @@ namespace ProjectCarrot
 
         public static readonly int schedulePause = 6; // in 1/4 hours
 
+        public static readonly bool deleteFilesAfterUsed = false; // audio files and images will be deleted after video is generated
+        public static readonly bool deleteVideosAfterUploaded = false;
+
+        public static readonly int maxCommentHeight = 750; // for screenshots only
+        public static readonly int minCharsForSingleComment = 450;
+
         // debug optios
         public static readonly bool renderVideo = true;
         public static readonly bool readText = true;
@@ -61,12 +76,12 @@ namespace ProjectCarrot
         public int videoCount;
         public string sessionName;
 
-        public SessionSettings(string name, int c, string rURL, string person, UploadPlatforms platforms)
+        public SessionSettings(string name, int count, string rURL, string person, UploadPlatforms platforms)
         {
             redditUrl = rURL;
             uploadPerson = person;
             uploadPlatforms = platforms;
-            videoCount = c;
+            videoCount = count;
             sessionName = name;
         }
     }

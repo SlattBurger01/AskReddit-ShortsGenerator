@@ -11,7 +11,7 @@ namespace ProjectCarrot
 {
     public static class VideoUploader
     {
-        public static string[] GetVideos() => Directory.GetFiles(Paths.completedVideosFolder);
+        public static string[] GetVideos() => Directory.GetFiles(LocalPaths.completedVideosFolder);
 
         private static SlDriver driver;
 
@@ -109,10 +109,7 @@ namespace ProjectCarrot
 
             while (true)
             {
-                try
-                {
-                    Base.ClickElement(YouTubeXPaths.scheduleButton); // click on schedule
-                }
+                try { Base.ClickElement(YouTubeXPaths.scheduleButton); }
                 catch { break; } // if button was already clicked: it will interrupt click / page was loaded and the button does not exist anymore
 
                 Thread.Sleep(100);
@@ -167,33 +164,14 @@ namespace ProjectCarrot
 
         private static void UploadVideoToTiktok(string videoName, int y)
         {
-            while (true)
-            {
-                if (Base.ElementExists(TiktokPaths.videoInput, out IWebElement e))
-                {
-                    e.SendKeys(videoName);
-                    break;
-                }
+            Base.WaitAndSendKeysToElement(TiktokPaths.videoInput, videoName); // if you're getting null refferece errors try to increase max wait time
 
-                Thread.Sleep(50);
-            }
+            // wait until video is uploaded
+            Base.WaitForElement("/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div", Base.maxUploadInterWaitTime); // some element that is only visible after video is uploaded
 
-            int l = 0;
+            //Thread.Sleep(1000);
 
-            while (true) // wait until video is uploaded
-            {
-                if (l < 500) { l++; continue; }
-
-                bool e = Base.ElementExists("//*[@id=\"root\"]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div");
-
-                if (e) break;
-
-                Thread.Sleep(50);
-            }
-
-            Thread.Sleep(1000);
-
-            IWebElement element = Base.GetElement_X("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div[1]/div/div/div");
+            IWebElement element = Base.GetElement_X(TiktokPaths.videoDescriptionInput);
 
             Actions actions = new Actions(driver);
             actions.Click(element).Perform();
@@ -212,7 +190,7 @@ namespace ProjectCarrot
             string[] tags = VideoData.tiktokTags;
             for (int i = 0; i < tags.Length; i++)
             {
-                actions.SendKeys($" #{tags[i]}").Perform();
+                actions.SendKeys($"#{tags[i]}").Perform();
 
                 Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
                 Thread.Sleep(200);
@@ -292,37 +270,12 @@ namespace ProjectCarrot
 
         private static void MoveVideoFilesToUploaded()
         {
-            DirectoryInfo tFolder = Directory.CreateDirectory(@$"{Paths.uploadedVideosFolder}\{VideoEditor.SpecialFolder}");
+            DirectoryInfo tFolder = Directory.CreateDirectory(@$"{LocalPaths.uploadedVideosFolder}\{VideoEditor.SpecialFolder}");
 
             string[] files = GetVideos();
 
-            MoveFilesToFolder(files, tFolder);
-        }
-
-        public static void MoveFilesToFolder(string[] files, DirectoryInfo targetFolder, string customIndex = "")
-        {
-            for (int i = 0; i < files.Length; i++)
-            {
-                FileInfo info = new FileInfo(files[i]);
-
-                string name = RemoveType(info.Name, out string type);
-
-                string newPath = @$"{targetFolder.FullName}\{name}{customIndex}{type}";
-
-                Debug.WriteLine(files[i]);
-                Debug.WriteLine(newPath);
-
-                Directory.Move(files[i], newPath);
-            }
-        }
-
-        private static string RemoveType(string name, out string type)
-        {
-            if (name.Contains(".png")) type = ".png";
-            else if (name.Contains(".mp4")) type = ".mp4";
-            else type = ".mp3";
-
-            return name.Remove(name.Length - 4);
+            if (Settings.deleteVideosAfterUploaded) LocalFilesHandler.DeleteFiles(files);
+            else LocalFilesHandler.MoveFilesToFolder(files, tFolder);
         }
 
         // --- --- --- --- --- || --- --- --- --- --- || --- --- --- --- --- \\
@@ -339,7 +292,6 @@ namespace ProjectCarrot
 
     public static class VideoData
     {
-        //public static readonly string[] tags = new string[] { "askreddit", "reddit", "meme", "story", "storytime", "fyp" };
         public static readonly string[] youtubeTags = new string[] { "shorts", "askreddit", "reddit" };
         public static readonly string[] tiktokTags = new string[] { "fyp", "askreddit", "reddit" };
 
