@@ -1,6 +1,5 @@
 using OpenQA.Selenium;
 using ProjectCarrot.Text;
-using Selenium.Extensions;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing.Imaging;

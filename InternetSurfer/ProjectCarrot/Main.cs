@@ -88,16 +88,19 @@ namespace ProjectCarrot
             }
 
             bool b1 = CanUpload_CheckFiles(files1);
-            bool b2 = CanUpload_CheckFiles(files2) && create;
+            bool b2 = !CanUpload_CheckFiles(files2) && create;
 
             bool chrome = ChromeIsOpened();
 
+            bool pyttsx = Settings.speechType == TextToSpeechType.pyttsx3;
+
             if (!b1) Form1.form.label2.Text = "Download folder is not empty! Click any button to clear target folder.";
-            if (!b2) Form1.form.label6.Text = "Created videos folder is not empty! Click any button to clear target folder.";
+            if (b2) Form1.form.label6.Text = "Created videos folder is not empty! Click any button to clear target folder.";
             if (chrome) Form1.form.label7.Text = "Chrome is running, therefore uploading will fail";
+            if (pyttsx) Form1.form.label8.Text = "Pyttsx3 is selected as speech type. (Not an error, just make sure you wanna use it)";
 
             second = true;
-            return b1 && b2 && !chrome;
+            return b1 && !b2 && !chrome && !pyttsx;
         }
 
         private static bool CanUpload_CheckFiles(string[] files) { return files.Length == 0; }

@@ -29,23 +29,21 @@ firstPause = .4  # in seconds, pause between title and first comment
 pause = .5  # in seconds, pause between audios and videos
 beforeEndPause = .4  # in seconds
 
-def EditVideo(commentData):
-    print("Editing video !")
+def EditVideo(commentData : tuple[list, list]):
+    print(f"Editing video (subs: {enableSubs})!")
 
-    a1 = Utils.GetAudio(audio1, 0)
-    i1 = Utils.GetImage(image1, 0, a1.duration)
+    a1 : AudioClip = Utils.GetAudio(audio1, 0)
+    i1 : ImageClip = Utils.GetImage(image1, 0, a1.duration)
 
-    images = commentData[0]
-    audios = commentData[1]
+    images : list[str] = commentData[0]
+    audios : list[str] = commentData[1]
 
     finalAudios : list[AudioClip] = [a1]
     finalVideos : list[VideoClip] = [i1]
 
-    print("1")
+    audioDuration : float = a1.duration + firstPause
 
-    audioDuration = a1.duration + firstPause
-
-    recentAudio = None
+    recentAudio : AudioClip = None
 
     for i in range(len(audios)):
         bAudio = a1
@@ -54,7 +52,8 @@ def EditVideo(commentData):
 
         audio = AudioFileClip(audios[i])
 
-        if(len(images) != 0):
+        if(enableSubs == False):
+            print("Get image")
             image = ImageClip(images[i])
 
         # pause is included in "NextImageStart" !!!
@@ -78,7 +77,7 @@ def EditVideo(commentData):
 
     finalAudioClip : CompositeAudioClip = CompositeAudioClip(finalAudios).set_fps(44100)
 
-    if (enableSubs):
+    if (enableSubs == True):
         subtitles : SubtitlesClip = SubtitlesGenerator.GetSubtitles(finalAudioClip, videoText, a1.duration + pause)
         finalVideos.append(subtitles.set_duration(videoDuration))
 

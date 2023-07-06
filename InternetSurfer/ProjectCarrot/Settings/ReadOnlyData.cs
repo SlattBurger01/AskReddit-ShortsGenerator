@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace ProjectCarrot
 {
     public static class Ttsmp3XPaths
@@ -47,7 +45,7 @@ namespace ProjectCarrot
         public static readonly string loginIFrame = "/html/body/div[1]/div/div[2]/div[3]/div/div/iframe";
 
         public static readonly string loginButton_old = "/html/body/div[1]/div/div[2]/div[1]/header/div/div[2]/div/div[1]/a";
-        public static readonly string loginButton_new = "/html/body/shreddit-app/reddit-header-large/header/nav/div[3]/faceplate-tracker[2]/a";
+        public static readonly string loginButton_new = "/html/body/shreddit-app/reddit-header-large/reddit-header-action-items/header/nav/div[3]/span[3]/faceplate-tracker/faceplate-tooltip/a";
 
         public static readonly string usernameInput = "/html/body/div/main/div[1]/div/div/form/fieldset[1]/input";
         public static readonly string passwordInput = "/html/body/div/main/div[1]/div/div/form/fieldset[2]/input";

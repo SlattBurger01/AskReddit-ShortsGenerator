@@ -1,5 +1,3 @@
-using OpenQA.Selenium;
-using Selenium.Extensions;
 using System.Text.RegularExpressions;
 
 namespace ProjectCarrot.Text

@@ -1,9 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
-using Selenium.Extensions;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Base = ProjectCarrot.WebScraperBase;
 
 namespace ProjectCarrot

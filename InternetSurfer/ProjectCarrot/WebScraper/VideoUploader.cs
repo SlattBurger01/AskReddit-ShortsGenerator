@@ -152,7 +152,7 @@ namespace ProjectCarrot
         {
             NewTab("https://www.tiktok.com/upload");
 
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
 
             for (int i = 0; i < videos.Length; i++)
             {
@@ -169,16 +169,20 @@ namespace ProjectCarrot
             // wait until video is uploaded
             Base.WaitForElement("/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div", Base.maxUploadInterWaitTime); // some element that is only visible after video is uploaded
 
-            //Thread.Sleep(1000);
+            Debug.WriteLine("Video is uploaded !");
 
-            IWebElement element = Base.GetElement_X(TiktokPaths.videoDescriptionInput);
+            IWebElement descriptionInput = Base.GetElement_X(TiktokPaths.videoDescriptionInput);
+
+            Debug.WriteLine($"input: {descriptionInput}");
+
+            descriptionInput.Click();
 
             Actions actions = new Actions(driver);
-            actions.Click(element).Perform();
+            //actions.Click(descriptionInput).Perform();
 
             for (int i = 0; i < 50; i++)
             {
-                actions.SendKeys(Keys.Backspace);
+                actions.SendKeys(descriptionInput, Keys.Backspace);
                 Thread.Sleep(50);
             }
 
@@ -190,12 +194,12 @@ namespace ProjectCarrot
             string[] tags = VideoData.tiktokTags;
             for (int i = 0; i < tags.Length; i++)
             {
-                actions.SendKeys($"#{tags[i]}").Perform();
+                actions.SendKeys(descriptionInput, $"#{tags[i]}").Perform();
 
                 Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
                 Thread.Sleep(200);
 
-                actions.SendKeys(Keys.Enter).Perform();
+                actions.SendKeys(descriptionInput, Keys.Enter).Perform();
                 Thread.Sleep(500);
             }
 

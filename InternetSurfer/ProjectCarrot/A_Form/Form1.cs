@@ -1,7 +1,3 @@
-using OpenQA.Selenium;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-
 namespace ProjectCarrot
 {
     public partial class Form1 : Form

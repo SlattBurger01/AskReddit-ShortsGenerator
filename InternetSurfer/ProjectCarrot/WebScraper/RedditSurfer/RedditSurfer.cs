@@ -1,13 +1,8 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.DevTools.V111.Audits;
-using OpenQA.Selenium.DevTools.V113.FedCm;
 using ProjectCarrot.Text;
-using Selenium.Extensions;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using Base = ProjectCarrot.WebScraperBase;
 using rUtils = ProjectCarrot.RedditSurferUtils;
 
@@ -148,9 +143,7 @@ namespace ProjectCarrot
             rUtils.TakeScreenshot(Base.GetElement_X(AskRedditXPaths.post), FileNames.postName, 0);
             TextReader.ReadText(header.Text, FileNames.postAudio, Settings.speechType, out _);
 
-            //Thread.Sleep(2000);
-
-            ReadAndScreenshotComments();
+            ReadAndScreenshotComments(out bool generateSubs);
 
             while (true)
             {
@@ -162,12 +155,12 @@ namespace ProjectCarrot
             driver.Navigate().Back();
             AudioFilesHandler.TryRenameAudioFiles();
 
-            VideoEditor.EditVideo(videoId, settings.sessionName, settings);
+            VideoEditor.EditVideo(videoId, settings.sessionName, settings, generateSubs);
 
             return true;
         }
 
-        private static void ReadAndScreenshotComments()
+        private static void ReadAndScreenshotComments(out bool generateSubs)
         {
             Thread.Sleep(1000);
 
@@ -183,7 +176,9 @@ namespace ProjectCarrot
 
             Debug.WriteLine($"Comments found on {cPath} (last: {comments.Last().Text})");
 
-            List<int> selectedComments = GetSuitableComments(comments, cPath);
+            List<int> selectedComments = GetSuitableComments(comments, cPath, out generateSubs);
+
+            //generateSubs = selectedComments.Count > 1;
 
             for (int i = 0; i < selectedComments.Count; i++)
             {
@@ -197,15 +192,13 @@ namespace ProjectCarrot
 
             int currentWordCount = 0;
 
-            bool takeSrc = selectedComments.Count > 1;
-
             Debug.WriteLine($"Comments ({selectedComments.Count})");
 
             for (int i = 0; i < selectedComments.Count; i++)
             {
                 int id = selectedComments[i];
 
-                ReadCommentAndTakeScreenshot(comments[id], id, cPath, i, takeSrc, out string t);
+                ReadCommentAndTakeScreenshot(comments[id], id, cPath, i, !generateSubs, out string t);
 
                 currentWordCount += TextUtils.GetWordCount(t);
 
@@ -231,14 +224,14 @@ namespace ProjectCarrot
             TextReader.ReadText(t, $"{FileNames.commentAudio}-{commentIndex}", Settings.speechType, out text);
         }
 
-        private static List<int> GetSuitableComments(ReadOnlyCollection<IWebElement> comments, string cPath)
+        private static List<int> GetSuitableComments(ReadOnlyCollection<IWebElement> comments, string cPath, out bool singleComment)
         {
             List<int> targetComments = new List<int>();
             List<int> suitableComments = new List<int>();
 
             int totalWordCount = 0; // if single comment mode triggered: comment char count
 
-            bool singleComment_ = false;
+            singleComment = false;
 
             for (int i = 0; i < comments.Count; i++)
             {
@@ -252,12 +245,12 @@ namespace ProjectCarrot
 
                 if (Settings_1(wCount, cText)) continue;
 
-                if (!singleComment_)
+                if (!singleComment)
                 {
-                    singleComment_ = e.Size.Height > Settings.maxCommentHeight || cText.Length > Settings.minCharsForSingleComment;
+                    singleComment = e.Size.Height > Settings.maxCommentHeight || cText.Length > Settings.minCharsForSingleComment;
                 }
 
-                if (singleComment_) // longer than something ---> one comment per video is triggered
+                if (singleComment && Settings.enableSubs) // longer than something ---> one comment per video is triggered
                 {
                     if (cText.Length < totalWordCount) continue;
 
@@ -276,7 +269,7 @@ namespace ProjectCarrot
                 suitableComments.Add(i);
                 totalWordCount += wCount;
 
-                if (wCount >= Settings.targetCommentMinWordCount) targetComments.Add(i);
+                if (wCount >= Settings.minCommentWordCount) targetComments.Add(i);
             }
 
             if (targetComments.Count == 0) targetComments = suitableComments;

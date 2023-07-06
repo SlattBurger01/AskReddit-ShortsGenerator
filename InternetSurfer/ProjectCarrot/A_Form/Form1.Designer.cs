@@ -39,6 +39,7 @@
             label5 = new Label();
             label6 = new Label();
             label7 = new Label();
+            label8 = new Label();
             SuspendLayout();
             // 
             // button1
@@ -93,7 +94,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(354, 130);
+            label2.Location = new Point(350, 130);
             label2.Name = "label2";
             label2.Size = new Size(38, 15);
             label2.TabIndex = 5;
@@ -129,7 +130,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(354, 149);
+            label6.Location = new Point(350, 150);
             label6.Name = "label6";
             label6.Size = new Size(38, 15);
             label6.TabIndex = 9;
@@ -138,17 +139,27 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(354, 171);
+            label7.Location = new Point(350, 170);
             label7.Name = "label7";
             label7.Size = new Size(38, 15);
             label7.TabIndex = 10;
             label7.Text = "label7";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(350, 190);
+            label8.Name = "label8";
+            label8.Size = new Size(38, 15);
+            label8.TabIndex = 11;
+            label8.Text = "label8";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label8);
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(label5);
@@ -180,5 +191,6 @@
         public Label label5; // custom folder
         public Label label6;
         public Label label7;
+        public Label label8; // pyttsx reader warning
     }
 }

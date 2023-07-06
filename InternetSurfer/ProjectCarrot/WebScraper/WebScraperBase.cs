@@ -2,7 +2,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Security.Policy;
 
 namespace ProjectCarrot
 {

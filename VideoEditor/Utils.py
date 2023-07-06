@@ -4,7 +4,7 @@ import Paths
 import Settings
 from moviepy.editor import *
 
-def GetComments() -> tuple[list, list]:
+def GetComments() -> tuple[list[str], list[str]]:
     """ Returns tuple of sorted (commentImagePaths, commentAudioPaths) lists """
 
     comments = glob.glob(f"{Paths.contentGeneratorFolder}\*.png")
@@ -20,10 +20,10 @@ def GetComments() -> tuple[list, list]:
 
     return (sortedCommentsH, sortedCommentsA)
 
-def GetSortedComments_(comments : list) -> list:
+def GetSortedComments_(comments : list[str]) -> list[str]:
     """ Returns list of sorted comments, "comments" is list of comment paths """
 
-    sortedComments = []
+    sortedComments : list[str] = []
 
     cPosition = 0
 
