@@ -45,6 +45,8 @@ def EditVideo(commentData : tuple[list, list]):
 
     recentAudio : AudioClip = None
 
+    print(f"Audios length: {len(audios)}")
+
     for i in range(len(audios)):
         bAudio = a1
         if(i != 0):

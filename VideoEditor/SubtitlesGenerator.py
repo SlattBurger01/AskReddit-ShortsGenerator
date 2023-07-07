@@ -79,8 +79,8 @@ def GetSubtitles(audio : AudioFileClip, text : str, start : float):
 
     return result
 
-subtitlesWidth = 800
-fontS = 90
+subtitlesWidth = 750
+fontS = 80
 strokeW = 4
 
 def GetSubtitlesGenerator() -> TextClip:

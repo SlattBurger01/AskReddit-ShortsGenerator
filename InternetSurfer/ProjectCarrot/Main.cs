@@ -11,8 +11,6 @@ namespace ProjectCarrot
 
             Form1.form.button2.Text = $"Create {Settings.defaultSettings.videoCount} videos";
             Form1.form.button3.Text = $"Upload all videos in folder";
-
-            RedditSurfer.onBeforeNewVideoGeneratingStart += VideoEditor.ClearCommentsText;
         }
 
         /// <summary> Create and upload </summary>
@@ -46,22 +44,16 @@ namespace ProjectCarrot
         /// <summary> Test </summary>
         public static void Button4Click()
         {
-            string text = "s     ";
-
-            while (text.Last() == ' ')
-            {
-                text = text.Substring(0, text.Length - 1);
-            }
-
-            Debug.WriteLine(text);
+            AskRedditSurfer.SetUp(RedditUrls.trueOffMyChest);
+            TrueOffMyChestReddit.CreateVideos(1, Settings.defaultSettings);
         }
 
 
         // ----- ----- ----- ----- -----
         private static void CreateVideos(SessionSettings settings)
         {
-            RedditSurfer.SetUp(settings.redditUrl);
-            RedditSurfer.CreateVideos(settings.videoCount, settings);
+            AskRedditSurfer.SetUp(settings.redditUrl);
+            AskRedditSurfer.CreateVideos(settings.videoCount, settings);
         }
 
         private static void UploadVideos(SessionSettings settings)

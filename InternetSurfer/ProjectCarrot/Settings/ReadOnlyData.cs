@@ -71,7 +71,11 @@ namespace ProjectCarrot
         public static readonly string notLoadedComments_RetryButton_1 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/button";
         public static readonly string notLoadedComments_RetryButton_2 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[5]/button";
 
-        public static string interestsTab = "/html/body/div[1]/div/div[2]/div[4]/div/div/div/header/div/div[2]/button";
+        public static readonly string interestsTab = "/html/body/div[1]/div/div[2]/div[4]/div/div/div/header/div/div[2]/button";
+
+        public static readonly string postDescriptionParent = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[4]/div";
+
+        public static readonly string postHeaderTextOnly = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[3]";
 
         // --- NOT LOGGED IN ---
         private static readonly string posts_N = "/html/body/div[1]/div/div[2]/div[2]/div/div/div/div[2]/div[4]/div[1]/div[4]/div";
@@ -198,8 +202,19 @@ namespace ProjectCarrot
 
     public static class RedditUrls
     {
-        public static readonly string AskReddit = "https://www.reddit.com/r/AskReddit/top/";
-        public static readonly string AskMen = "https://www.reddit.com/r/AskMen/top/";
-        public static readonly string AskWomen = "https://www.reddit.com/r/AskWomen/top/";
+        public static readonly string askReddit = "https://www.reddit.com/r/AskReddit/top";
+        public static readonly string askMen = "https://www.reddit.com/r/AskMen/top";
+        public static readonly string askWomen = "https://www.reddit.com/r/AskWomen/top";
+
+        public static readonly string trueOffMyChest = "https://www.reddit.com/r/TrueOffMyChest/top";
+    }
+
+    public static class TtsUrls
+    {
+        public static readonly string ttsMp3 = "https://ttsmp3.com";
+        public static readonly string narakeet = "https://www.narakeet.com/app/text-to-audio";
+        public static readonly string ttsfree = "https://ttsfree.com";
+        public static readonly string ttsfree_login = "https://ttsfree.com/login";
+        public static readonly string voiceMaker = "https://voicemaker.in";
     }
 }

@@ -13,53 +13,20 @@ namespace ProjectCarrot
             switch (speechType)
             {
                 case TextToSpeechType.ttsmp3:
-                    driver.Navigate().GoToUrl("https://ttsmp3.com/");
+                    driver.Navigate().GoToUrl(TtsUrls.ttsMp3);
                     Base.ClickElement(Ttsmp3XPaths.mathewVoice);
                     break;
 
                 case TextToSpeechType.narakeet:
-                    driver.Navigate().GoToUrl("https://www.narakeet.com/app/text-to-audio");
+                    driver.Navigate().GoToUrl(TtsUrls.narakeet);
                     break;
 
                 case TextToSpeechType.ttsfree:
-                    string url = Settings.loginToTtsFree ? "https://ttsfree.com/login" : "https://ttsfree.com/";
-                    driver.Navigate().GoToUrl(url);
-
-                    /*Thread.Sleep(500);
-
-                    Base.ClickElement("/html/body/div[1]/div/div/div/div[2]/div/button[2]"); // cookies */
-
-                    Base.WaitAndClickElement("/html/body/div[1]/div/div/div/div[2]/div/button[2]"); // cookies
-
-                    //Thread.Sleep(200);
-
-                    if (Settings.loginToTtsFree) LoginToTtsFree();
-
-                    Base.WaitAndClickElement("/html/body/section[2]/div[2]/form/div[2]/div[1]/div[1]/div[2]/div/div[4]"); // select target voice
-
-                    IWebElement speedSlider = Base.GetElement_X("/html/body/section[2]/div[2]/form/div[2]/div[1]/div[1]/span"); // Jake voice
-
-                    Actions action = new Actions(driver);
-                    action.MoveToElement(speedSlider);
-
-                    // if chrome is being moved while adjusting voice speed, the value might be diferent
-                    action.ClickAndHold().MoveByOffset((int)TtsFreeSpeed.p14, 0).Release();
-                    action.Build().Perform();
-
+                    SetupTtsfree(driver);
                     break;
 
                 case TextToSpeechType.voiceMaker:
-                    driver.Navigate().GoToUrl("https://voicemaker.in/");
-
-                    Base.TryClickElement("/html/body/nav/div/button"); // menu expand button
-
-                    Base.ClickElement("/html/body/nav/div/div/ul/div[1]/button"); // login
-
-                    Base.SendKeysToElement("/html/body/div[1]/div/div/div/div/form/div[2]/input", LogingData.gmailVoiceMaker); // gmail input
-                    Base.SendKeysToElement("/html/body/div[1]/div/div/div/div/form/div[3]/input", LogingData.password); // password input
-
-                    Base.ClickElement("/html/body/div[1]/div/div/div/div/form/button"); // login final
-
+                    SetupVoicemaker(driver);
                     break;
 
                 case TextToSpeechType.pyttsx3: break;
@@ -100,6 +67,41 @@ namespace ProjectCarrot
             }
         }
 
+        public static void SetupTtsfree(ChromeDriver driver)
+        {
+            string url = Settings.loginToTtsFree ? TtsUrls.ttsfree_login : TtsUrls.ttsfree;
+            driver.Navigate().GoToUrl(url);
+
+            Base.WaitAndClickElement("/html/body/div[1]/div/div/div/div[2]/div/button[2]"); // cookies
+
+            if (Settings.loginToTtsFree) LoginToTtsFree();
+
+            Base.WaitAndClickElement("/html/body/section[2]/div[2]/form/div[2]/div[1]/div[1]/div[2]/div/div[4]"); // select target voice
+
+            IWebElement speedSlider = Base.GetElement_X("/html/body/section[2]/div[2]/form/div[2]/div[1]/div[1]/span"); // Jake voice
+
+            Actions action = new Actions(driver);
+            action.MoveToElement(speedSlider);
+
+            // if chrome is being moved while adjusting voice speed, the value might be diferent
+            action.ClickAndHold().MoveByOffset((int)TtsFreeSpeed.p14, 0).Release();
+            action.Build().Perform();
+        }
+
+        public static void SetupVoicemaker(ChromeDriver driver)
+        {
+            driver.Navigate().GoToUrl(TtsUrls.voiceMaker);
+
+            Base.TryClickElement("/html/body/nav/div/button"); // menu expand button
+
+            Base.ClickElement("/html/body/nav/div/div/ul/div[1]/button"); // login
+
+            Base.SendKeysToElement("/html/body/div[1]/div/div/div/div/form/div[2]/input", LogingData.gmailVoiceMaker); // gmail input
+            Base.SendKeysToElement("/html/body/div[1]/div/div/div/div/form/div[3]/input", LogingData.password); // password input
+
+            Base.ClickElement("/html/body/div[1]/div/div/div/div/form/button"); // login final
+        }
+
         private static void LoginToTtsFree()
         {
             Base.SendKeysToElement(TtsfreeXPaths.usernameInput, LogingData.userNameTtsFree);
@@ -112,9 +114,9 @@ namespace ProjectCarrot
 
         private static void RedText_VoiceMaker(string text, string fileName)
         {
-            RedditSurfer.OpenReader();
+            AskRedditSurfer.OpenReader();
 
-            RedditSurfer.driver.Navigate().Refresh(); // necesary to determine if audio was already converted
+            AskRedditSurfer.driver.Navigate().Refresh(); // necesary to determine if audio was already converted
 
             /* Jake voice*/
             try { Base.WaitAndClickElement("/html/body/section/div/div/div/form/div[4]/div[2]/div[2]/div[2]/label"); }
@@ -138,13 +140,13 @@ namespace ProjectCarrot
             Base.ClickElement("/html/body/section/div/div/div/form/div[4]/div[3]/div[1]/button[2]"); // download
 
             AudioFilesHandler.AddTargetName(fileName);
-            RedditSurfer.OpenReddit();
+            AskRedditSurfer.OpenReddit();
         }
 
         // Narakeet does not support comercial use for free accounts, so maybye be careful :)
         private static void ReadText_Narakeet(string text, string fileName)
         {
-            RedditSurfer.OpenReader();
+            AskRedditSurfer.OpenReader();
 
             IWebElement input = Base.GetElement_X("/html/body/main/div[5]/div/div[1]/div[3]/div[6]/div[2]");
 
@@ -158,7 +160,7 @@ namespace ProjectCarrot
             Base.WaitAndClickElement("/html/body/main/div[4]/div/div/div[3]/a[1]"); // "new audio button" (return)
 
             AudioFilesHandler.AddTargetName(fileName);
-            RedditSurfer.OpenReddit();
+            AskRedditSurfer.OpenReddit();
         }
 
         private static void ReadText_Pyttsx3(string text, string fileName)
@@ -170,7 +172,7 @@ namespace ProjectCarrot
 
         private static void ReadText_Ttsmp3(string text, string fileName)
         {
-            RedditSurfer.OpenReader();
+            AskRedditSurfer.OpenReader();
 
             Thread.Sleep(2000);
 
@@ -193,12 +195,12 @@ namespace ProjectCarrot
             Base.ClickElement(Ttsmp3XPaths.downloadButton);
 
             AudioFilesHandler.AddTargetName(fileName);
-            RedditSurfer.OpenReddit();
+            AskRedditSurfer.OpenReddit();
         }
 
         private static void ReadText_Ttsfree(string text, string fileName)
         {
-            RedditSurfer.OpenReader();
+            AskRedditSurfer.OpenReader();
 
             IWebElement input;
 
@@ -229,7 +231,7 @@ namespace ProjectCarrot
             executor.ExecuteScript("arguments[0].click();", Base.GetElement_X(TtsfreeXPaths.downloadButton));
 
             AudioFilesHandler.AddTargetName(fileName);
-            RedditSurfer.OpenReddit();
+            AskRedditSurfer.OpenReddit();
         }
 
         public static string ConvertToBMP(string s1)

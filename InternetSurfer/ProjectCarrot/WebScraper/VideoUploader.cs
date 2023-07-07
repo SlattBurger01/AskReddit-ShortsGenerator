@@ -189,17 +189,19 @@ namespace ProjectCarrot
             Thread.Sleep(1000);
 
             string k = LocalFilesHandler.GetVideoName(y);
-            if(!string.IsNullOrEmpty(k)) actions.SendKeys(k);
+            if(!string.IsNullOrEmpty(k)) actions.SendKeys($"{k} ");
+
+            actions.SendKeys(Keys.End);
 
             string[] tags = VideoData.tiktokTags;
             for (int i = 0; i < tags.Length; i++)
             {
                 actions.SendKeys(descriptionInput, $"#{tags[i]}").Perform();
 
-                Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
+                IWebElement element = Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
                 Thread.Sleep(200);
 
-                actions.SendKeys(descriptionInput, Keys.Enter).Perform();
+                actions.SendKeys(element, Keys.Enter).Perform();
                 Thread.Sleep(500);
             }
 

@@ -5,7 +5,7 @@ namespace ProjectCarrot
         ttsmp3,
         ttsfree,
         voiceMaker,
-        narakeet, 
+        narakeet,
         pyttsx3
     }
 
@@ -14,19 +14,19 @@ namespace ProjectCarrot
         public static readonly Size browserSize = new Size(660, 1080);
 
         // for "Create" and "Upload" option
-        public static readonly SessionSettings defaultSettings = new SessionSettings("def", 3, RedditUrls.AskReddit, ChromePersons.person2, new UploadPlatforms(0, 1, 0));
+        public static readonly SessionSettings defaultSettings = new SessionSettings("def", 2, RedditUrls.askReddit, ChromePersons.person2, new UploadPlatforms(0, 1, 0));
 
         // for "Create and Upload" option
         public static readonly SessionSettings[] sessionsSettings = new SessionSettings[]
         {
-            new SessionSettings("p1", 4, RedditUrls.AskReddit, ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
-            new SessionSettings("p2", 4, RedditUrls.AskWomen, ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
+            new SessionSettings("p1", 4, RedditUrls.askReddit, ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            new SessionSettings("p2", 4, RedditUrls.askWomen, ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
             //new SessionSettings("p3", 3, RedditUrls.AskMen, ChromePersons.person3, new UploadPlatforms(1, 1, 0)) I don't remember what account I have been using xDDD
         };
 
         public static readonly int sessionSettingsVideoCount = GetSessionSettingsVideoCount(sessionsSettings);
 
-        public static readonly TextToSpeechType speechType = TextToSpeechType.ttsfree;
+        public static readonly TextToSpeechType speechType = TextToSpeechType.pyttsx3;
 
         public static readonly bool loginToReddit = true;
         public static readonly bool loginToTtsFree = true;
@@ -34,7 +34,7 @@ namespace ProjectCarrot
         public static readonly int maxWordCountPerComment = int.MaxValue;
         public static readonly int minWordCountPerComment = 1;
 
-        public static readonly int maxCharsCountPerComment = 2000;
+        public static readonly int maxCharsCountPerComment = 1500;
 
         public static readonly int minCommentWordCount = 25; // if no comment like this was found: this option will be ignored
 
