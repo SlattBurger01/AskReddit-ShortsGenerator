@@ -8,6 +8,7 @@ using rBase = ProjectCarrot.RedditSurferBase;
 
 namespace ProjectCarrot
 {
+    /// <summary> To setup class: use AskRedditSurfer.SetUp() </summary>
     public static class TrueOffMyChestReddit
     {
         public static ChromeDriver driver => AskRedditSurfer.driver;
@@ -39,14 +40,20 @@ namespace ProjectCarrot
 
             if (rBase.PostIsPromoted(posts[postId + 1])) return false;
 
-            rBase.OpenPost_(postId + 2);
+            rBase.OpenPost_(postId + 2, true);
 
             IWebElement header = Base.WaitForElement(AskRedditXPaths.postHeader);
 
             LocalFilesHandler.videoNames.Add(header.Text);
 
-            // to do: change this to title only
-            rBase.TakeScreenshot(Base.GetElement_X(AskRedditXPaths.postHeaderTextOnly), FileNames.postName, 0);
+            IWebElement e1 = Base.GetElement_X(AskRedditXPaths.postUserHeader);
+            IWebElement e2 = Base.GetElement_X(AskRedditXPaths.postHeaderTextOnly);
+
+            int l = e2.Location.Y - e1.Location.Y;
+
+            Debug.WriteLine($"dist: {l}");
+
+            rBase.TakeScreenshot(e2, FileNames.postName, 22, 47, l + 5, l + 10);
             TextReader.ReadText(header.Text, FileNames.postAudio, Settings.speechType, out _);
 
             string postText = rBase.GetCommentText(Base.GetElement_X(AskRedditXPaths.postDescriptionParent), true);

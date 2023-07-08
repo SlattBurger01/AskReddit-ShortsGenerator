@@ -7,23 +7,14 @@ namespace ProjectCarrot
     {
         public static void Inialize()
         {
-            Form1.form.button1.Text = $"Create and upload {Settings.sessionSettingsVideoCount} videos \r\n using {Settings.sessionsSettings.Length} settings";
+            Form1.form.button1.Text = $"Create and upload {Settings.sessionSettingsVideoCount01} videos \r\n using {Settings.sessionsSettings01.Length} settings";
 
-            Form1.form.button2.Text = $"Create {Settings.defaultSettings.videoCount} videos";
+            Form1.form.button2.Text = $"Create {Settings.defaultSettings.video.count} videos";
             Form1.form.button3.Text = $"Upload all videos in folder";
         }
 
-        /// <summary> Create and upload </summary>
-        public static void Button1Click()
-        {
-            if (!CanContinue(true)) return;
-
-            for (int i = 0; i < Settings.sessionsSettings.Length; i++)
-            {
-                CreateVideos(Settings.sessionsSettings[i]);
-                UploadVideos(Settings.sessionsSettings[i]);
-            }
-        }
+        public static void Button1Click() => CreateAndUploadVideos(Settings.sessionsSettings01);
+        public static void Button7Click() => CreateAndUploadVideos(Settings.sessionsSettings02);
 
         /// <summary> Create only </summary>
         public static void Button2Click()
@@ -44,16 +35,36 @@ namespace ProjectCarrot
         /// <summary> Test </summary>
         public static void Button4Click()
         {
-            AskRedditSurfer.SetUp(RedditUrls.trueOffMyChest);
-            TrueOffMyChestReddit.CreateVideos(1, Settings.defaultSettings);
+            string t = "How much longer do we have to listen to this obese idiot jerk himself off talking about his Bs anyhow?!?, The Call was abruptly ended. All follow ups ignored. Maybe a week or two later we got a letter terminating all current and developing licensing deals for cause citing contract violations and the company was effectively quietly banned from ever doing business with any brand under that massive mouse umbrella. That dude lost them hundreds of millions in future business in about 15 seconds. When you first start you’re told never to suggest pitching anything owned by the mouse and then get told the story.";
+
+            Debug.WriteLine(TextsManager.GetFixedText(t));
         }
 
+        public static void CreateAndUploadVideos(SessionSettings[] settingsGroup)
+        {
+            if (!CanContinue(true)) return;
+
+            for (int i = 0; i < settingsGroup.Length; i++)
+            {
+                CreateVideos(settingsGroup[i]);
+                UploadVideos(settingsGroup[i]);
+            }
+        }
 
         // ----- ----- ----- ----- -----
         private static void CreateVideos(SessionSettings settings)
         {
-            AskRedditSurfer.SetUp(settings.redditUrl);
-            AskRedditSurfer.CreateVideos(settings.videoCount, settings);
+            AskRedditSurfer.SetUp(settings.video.rUrl);
+
+            switch (settings.video.type)
+            {
+                case VideoType.postAndComments:
+                    AskRedditSurfer.CreateVideos(settings.video.count, settings);
+                    break;
+                case VideoType.postAndDescription:
+                    TrueOffMyChestReddit.CreateVideos(settings.video.count, settings);
+                    break;
+            }
         }
 
         private static void UploadVideos(SessionSettings settings)

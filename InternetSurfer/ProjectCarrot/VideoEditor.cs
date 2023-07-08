@@ -41,10 +41,10 @@ namespace ProjectCarrot
 
         private static string commentsText = "";
 
-        /// <summary> Adds text 't' into 'commentsText', trims end and adds dot if necessary </summary>
+        /// <summary> Adds text 't' into 'commentsText', fixes text, trims end and adds dot if necessary </summary>
         public static void AddCommentText(string t)
         {
-            commentsText += $"{t} ";
+            commentsText += $"{TextsManager.GetFixedText(t)} ";
 
             commentsText = commentsText.TrimEnd();
 

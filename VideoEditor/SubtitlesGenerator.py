@@ -47,7 +47,10 @@ def GetSubsArray(audio : AudioFileClip, text : str, start : float):
                 if(b):
                     value = i * chunkDuration
 
-                    print(f"Updating subs ({curArrPos}/{len(textArr)})")
+                    while(textArr[curArrPos] == ""):
+                        curArrPos += 1
+
+                    print(f"Updating subs ({curArrPos}/{len(textArr)}) ({textArr[curArrPos]})")
                     subs.append(((prev, value), textArr[curArrPos]))
                     prev = value
 

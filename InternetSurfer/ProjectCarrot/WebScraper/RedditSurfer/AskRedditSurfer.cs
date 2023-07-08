@@ -34,8 +34,6 @@ namespace ProjectCarrot
 
         public static void CreateVideos(int count, SessionSettings settings, int startPost = 0)
         {
-            DateTime startTime = DateTime.Now;
-
             int vCount = startPost;
             int i = startPost;
 
@@ -49,12 +47,6 @@ namespace ProjectCarrot
             }
 
             driver.Quit();
-
-            TimeSpan fTime = DateTime.Now - startTime;
-
-            Debug.WriteLine($"{count} videos created in {fTime}");
-
-            Form1.form.label3.Text = $"{count} videos created in {fTime.ToString(@"hh\:mm\:ss")}";
         }
 
         /// <param name="postId"> id of VISIBLE post, therefore the first one is not reflected </param>
@@ -71,7 +63,7 @@ namespace ProjectCarrot
 
             if (rBase.PostIsPromoted(posts[postId + 1])) return false;
 
-            rBase.OpenPost_(postId + 2);
+            rBase.OpenPost_(postId + 2, true);
 
             IWebElement header = Base.WaitForElement(AskRedditXPaths.postHeader);
 

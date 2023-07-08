@@ -116,7 +116,7 @@ def GetAudio(refAudio : AudioClip, start) -> AudioClip:
 
 def GetImage(refImage, start, duration) -> ImageClip:
     """ Returns images with set values """
-    return refImage.set_start(start).set_position(Settings.imagePosition).set_duration(duration).resize(2).set_opacity(.95)
+    return refImage.set_start(start).set_position(Settings.imagePosition).set_duration(duration).resize(2).set_opacity(Settings.imageOpacity)
 
 def GetVideoPath(videoIdentifier : str) -> str:
     """ Returns path of rendered video """

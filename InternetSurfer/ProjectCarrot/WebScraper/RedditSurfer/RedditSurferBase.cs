@@ -52,9 +52,9 @@ namespace ProjectCarrot
 
         /// <summary> Tries to open post, if fails: tries to close interest tab </summary>
         /// <returns> if post was opened </returns>
-        public static bool OpenPost_(int postId)
+        public static bool OpenPost_(int postId, bool forced)
         {
-            try { OpenPostF(postId); }
+            try { OpenPostF(postId, forced); }
             catch (Exception e)
             {
                 IWebElement element = Base.GetElement_X(GetPostPath(postId));
@@ -64,8 +64,8 @@ namespace ProjectCarrot
                 Debug.WriteLine($"Post could not be opened! {e.Message}");
 
                 Base.ClickElement(AskRedditXPaths.interestsTab);
-                Thread.Sleep(100);
-                OpenPostF(postId + 2);
+                //Thread.Sleep(100);
+                OpenPostF(postId + 2, forced);
             }
 
             return true;
@@ -117,13 +117,14 @@ namespace ProjectCarrot
 
         private static readonly int baseLength = "padding-left: ".Length;
 
-        public static void OpenPostF(int sPost)
+        private static void OpenPostF(int sPost, bool forced)
         {
             string path = $"{GetPostPath(sPost)}/{AskRedditXPaths.openPostButton_local}";
 
             Debug.WriteLine($"Opening post ({sPost}) at path ({path})");
 
-            Base.ClickElement(path);
+            if (forced) Base.ForcedClick(path);
+            else Base.ClickElement(path);
 
             Base.ScrollToTop(); // you have to reset position immidiatelly to make correct screenshots
         }
@@ -233,15 +234,39 @@ namespace ProjectCarrot
         /// <param name="x"> Offset in x direction (horizontal) </param>
         public static void TakeScreenshot(IWebElement element, string name, int x)
         {
-            string fullName = $"{name}.png";
+            Rectangle croppedImage = new Rectangle(element.Location.X - x / 2, element.Location.Y - x / 2, element.Size.Width + x, element.Size.Height + x);
+
+            /*string fullName = $"{name}.png";
             string fileName = @$"{LocalPaths.filesPath}{fullName}";
 
             byte[] byteArray = ((ITakesScreenshot)AskRedditSurfer.driver).GetScreenshot().AsByteArray;
-            Rectangle croppedImage = new Rectangle(element.Location.X - x / 2, element.Location.Y - x / 2, element.Size.Width + x, element.Size.Height + x);
 
             Bitmap screenshot = new Bitmap(new MemoryStream(byteArray));
 
             screenshot = screenshot.Clone(croppedImage, screenshot.PixelFormat);
+
+            screenshot.Save(String.Format(fileName, ImageFormat.Png));*/
+
+            TakeScreenshotF(name, croppedImage);
+        }
+
+        public static void TakeScreenshot(IWebElement element, string name, int xp, int xn, int yp, int yn)
+        {
+            Rectangle croppedImage = new Rectangle(element.Location.X - xn, element.Location.Y - yp, element.Size.Width + xp, element.Size.Height + yn);
+
+            TakeScreenshotF(name, croppedImage);
+        }
+
+        private static void TakeScreenshotF(string name, Rectangle croppedImg)
+        {
+            string fullName = $"{name}.png";
+            string fileName = @$"{LocalPaths.filesPath}{fullName}";
+
+            byte[] byteArray = ((ITakesScreenshot)AskRedditSurfer.driver).GetScreenshot().AsByteArray;
+
+            Bitmap screenshot = new Bitmap(new MemoryStream(byteArray));
+
+            screenshot = screenshot.Clone(croppedImg, screenshot.PixelFormat);
 
             screenshot.Save(String.Format(fileName, ImageFormat.Png));
         }

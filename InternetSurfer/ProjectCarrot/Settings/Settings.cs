@@ -1,3 +1,5 @@
+using System.Security.Policy;
+
 namespace ProjectCarrot
 {
     public enum TextToSpeechType 
@@ -9,24 +11,35 @@ namespace ProjectCarrot
         pyttsx3
     }
 
+    public enum VideoType
+    {
+        postAndComments, // ask reddit
+        postAndDescription // true of my chest reddit
+    }
+
     public static class Settings
     {
         public static readonly Size browserSize = new Size(660, 1080);
 
         // for "Create" and "Upload" option
-        public static readonly SessionSettings defaultSettings = new SessionSettings("def", 2, RedditUrls.askReddit, ChromePersons.person2, new UploadPlatforms(0, 1, 0));
+        public static readonly SessionSettings defaultSettings = new SessionSettings("def", Video.PostAndComments(1, RedditUrls.askReddit), ChromePersons.person2, new UploadPlatforms(0, 1, 0));
 
         // for "Create and Upload" option
-        public static readonly SessionSettings[] sessionsSettings = new SessionSettings[]
+        public static readonly SessionSettings[] sessionsSettings01 = new SessionSettings[]
         {
-            new SessionSettings("p1", 4, RedditUrls.askReddit, ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
-            new SessionSettings("p2", 4, RedditUrls.askWomen, ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
-            //new SessionSettings("p3", 3, RedditUrls.AskMen, ChromePersons.person3, new UploadPlatforms(1, 1, 0)) I don't remember what account I have been using xDDD
+            new SessionSettings("p1", Video.PostAndComments(4, RedditUrls.askReddit), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            new SessionSettings("p2", Video.PostAndDescription(4, RedditUrls.askWomen), ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
         };
 
-        public static readonly int sessionSettingsVideoCount = GetSessionSettingsVideoCount(sessionsSettings);
+        public static readonly SessionSettings[] sessionsSettings02 = new SessionSettings[]
+        {
+            new SessionSettings("p1", Video.PostAndDescription(2, RedditUrls.trueOffMyChest), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            //new SessionSettings("p2", Video.PostAndDescription(4, RedditUrls.askWomen), ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
+        };
 
-        public static readonly TextToSpeechType speechType = TextToSpeechType.pyttsx3;
+        public static readonly int sessionSettingsVideoCount01 = GetSessionSettingsVideoCount(sessionsSettings01);
+
+        public static readonly TextToSpeechType speechType = TextToSpeechType.ttsfree;
 
         public static readonly bool loginToReddit = true;
         public static readonly bool loginToTtsFree = true;
@@ -61,7 +74,7 @@ namespace ProjectCarrot
 
             for (int i = 0; i < settings.Length; i++)
             {
-                val += settings[i].videoCount;
+                val += settings[i].video.count;
             }
 
             return val;
@@ -70,18 +83,16 @@ namespace ProjectCarrot
 
     public struct SessionSettings
     {
-        public string redditUrl;
+        public Video video;
         public string uploadPerson;
         public UploadPlatforms uploadPlatforms;
-        public int videoCount;
         public string sessionName;
 
-        public SessionSettings(string name, int count, string rURL, string person, UploadPlatforms platforms)
+        public SessionSettings(string name, Video v, string person, UploadPlatforms platforms)
         {
-            redditUrl = rURL;
+            video = v;
             uploadPerson = person;
             uploadPlatforms = platforms;
-            videoCount = count;
             sessionName = name;
         }
     }
@@ -105,5 +116,22 @@ namespace ProjectCarrot
             includeTikTok = t == 1;
             includeInstagram = i == 1;
         }
+    }
+
+    public struct Video
+    {
+        public int count;
+        public string rUrl;
+        public VideoType type;
+
+        public Video(int c, string url, VideoType t)
+        {
+            count = c;
+            rUrl = url;
+            type = t;
+        }
+
+        public static Video PostAndComments(int c, string url) => new Video(c, url, VideoType.postAndComments);
+        public static Video PostAndDescription(int c, string url) => new Video(c, url, VideoType.postAndDescription);
     }
 }

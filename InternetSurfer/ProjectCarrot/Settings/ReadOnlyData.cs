@@ -77,6 +77,8 @@ namespace ProjectCarrot
 
         public static readonly string postHeaderTextOnly = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[3]";
 
+        public static readonly string postUserHeader = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[2]";
+
         // --- NOT LOGGED IN ---
         private static readonly string posts_N = "/html/body/div[1]/div/div[2]/div[2]/div/div/div/div[2]/div[4]/div[1]/div[4]/div";
         private static readonly string post_N = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[2]/div[1]"; // for screenshots (after post was opened)

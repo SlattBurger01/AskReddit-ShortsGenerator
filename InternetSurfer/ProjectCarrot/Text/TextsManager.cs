@@ -7,15 +7,30 @@ namespace ProjectCarrot
     {
         public static string GetFixedText(string text)
         {
-            string fText_ = text.Replace('"'.ToString(), string.Empty); // so it does not mess up args for python text to speech
+            string fText = text.Replace('"'.ToString(), string.Empty); // so it does not mess up args for python text to speech
 
-            string fText = Regex.Replace(fText_, @"\p{Cs}", ""); // Removes emojis from text
+            fText = fText.Replace("!?!", "?");
+            fText = fText.Replace("?!?", "?");
+            fText = fText.Replace("”", string.Empty);
+            fText = fText.Replace("“", string.Empty);
+
+            fText = Regex.Replace(fText, @"\p{Cs}", ""); // Removes emojis from text
 
             fText = ReduceDots(fText); // Reduce them before spaces are added
 
             fText = AddSpacesAfterDots(fText);
 
+            fText = RemoveCommasAfterEndsOfSentences(fText);
+
             return ExplicitWordHandler.ReplaceExplicitWords(fText);
+        }
+
+        private static string RemoveCommasAfterEndsOfSentences(string t)
+        {
+            string pattern = @"([?!.]),";
+            string replacementP = "$1";
+
+            return Regex.Replace(t, pattern, replacementP);
         }
 
         private static string ReduceDots(string text) => ReduceChar(text, '.');

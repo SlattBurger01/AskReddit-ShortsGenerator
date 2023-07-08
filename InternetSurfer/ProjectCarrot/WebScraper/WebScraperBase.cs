@@ -170,10 +170,20 @@ namespace ProjectCarrot
             ((IJavaScriptExecutor)driver).ExecuteScript("window.scrollTo(0, 0);");
         }
 
+        /// <summary> Opens url in new window (chrome has to be already started) </summary>
         public static void OpenUrlInNewWindow(string url)
         {
             driver.SwitchTo().NewWindow(WindowType.Tab);
             driver.Navigate().GoToUrl(url);
+        }
+
+        /// <summary> Clicks on element using IJavaScriptExecutor </summary>
+        public static void ForcedClick(string path) => ForcedClick(GetElement_X(path));
+
+        /// <summary> Clicks on element using IJavaScriptExecutor </summary>
+        public static void ForcedClick(IWebElement element)
+        {
+            (driver as IJavaScriptExecutor).ExecuteScript("arguments[0].click();", element);
         }
     }
 }

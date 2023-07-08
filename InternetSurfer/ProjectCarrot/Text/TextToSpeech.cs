@@ -222,13 +222,12 @@ namespace ProjectCarrot
             while (Base.ElementExists(TtsfreeXPaths.downloadButton)) // wait until the button dissapears (it starts converting so you don't download the old audio)
             {
                 Debug.WriteLine("Waiting");
-                Thread.Sleep(50);
+                Thread.Sleep(10);
             }
 
             Base.WaitForElement(TtsfreeXPaths.downloadButton, Base.maxUploadInterWaitTime);
 
-            IJavaScriptExecutor executor = Base.driver as IJavaScriptExecutor;
-            executor.ExecuteScript("arguments[0].click();", Base.GetElement_X(TtsfreeXPaths.downloadButton));
+            Base.ForcedClick(Base.GetElement_X(TtsfreeXPaths.downloadButton));
 
             AudioFilesHandler.AddTargetName(fileName);
             AskRedditSurfer.OpenReddit();
