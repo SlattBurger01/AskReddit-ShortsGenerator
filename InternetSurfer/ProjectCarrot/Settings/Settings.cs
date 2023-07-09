@@ -47,7 +47,7 @@ namespace ProjectCarrot
         public static readonly int maxWordCountPerComment = int.MaxValue;
         public static readonly int minWordCountPerComment = 1;
 
-        public static readonly int maxCharsCountPerComment = 1500;
+        public static readonly int maxCharsCountPerComment = 900;
 
         public static readonly int minCommentWordCount = 25; // if no comment like this was found: this option will be ignored
 

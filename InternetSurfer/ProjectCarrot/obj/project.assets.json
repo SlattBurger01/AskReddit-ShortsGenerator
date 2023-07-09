@@ -43,7 +43,7 @@
           "lib/net5.0/WebDriver.Support.dll": {}
         }
       },
-      "Selenium.WebDriver/4.9.1": {
+      "Selenium.WebDriver/4.10.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
@@ -245,10 +245,10 @@
         "selenium.support.nuspec"
       ]
     },
-    "Selenium.WebDriver/4.9.1": {
-      "sha512": "GSBwNvJMtSGplGxkx8JLv55DxW5PTwTnRniD0q9G4PA7tcCVa3Hg/8/Jf6C3GDd+2DXWepQlBUR6GsIICHnBkw==",
+    "Selenium.WebDriver/4.10.0": {
+      "sha512": "MvgUaxeLqLOtRnNS+kHzqfOhLO+7ZEukhQMuS7ksQQPA2tGNXWhrRN3PTkTGuKhuodd9JkoZ4eCKVEQF6xPdmA==",
       "type": "package",
-      "path": "selenium.webdriver/4.9.1",
+      "path": "selenium.webdriver/4.10.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -266,7 +266,7 @@
         "manager/linux/selenium-manager",
         "manager/macos/selenium-manager",
         "manager/windows/selenium-manager.exe",
-        "selenium.webdriver.4.9.1.nupkg.sha512",
+        "selenium.webdriver.4.10.0.nupkg.sha512",
         "selenium.webdriver.nuspec"
       ]
     },
@@ -396,7 +396,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
-      "Selenium.WebDriver >= 4.9.1",
+      "Selenium.WebDriver >= 4.10.0",
       "Selenium.WebDriver.ChromeDriver >= 113.0.5672.6300",
       "Selenium.WebDriver.UndetectedChromeDriver >= 2.3.0"
     ]
@@ -442,7 +442,7 @@
         "dependencies": {
           "Selenium.WebDriver": {
             "target": "Package",
-            "version": "[4.9.1, )"
+            "version": "[4.10.0, )"
           },
           "Selenium.WebDriver.ChromeDriver": {
             "target": "Package",

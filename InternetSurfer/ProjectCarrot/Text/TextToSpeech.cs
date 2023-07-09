@@ -35,6 +35,8 @@ namespace ProjectCarrot
 
         public static void ReadText(string text, string fileName, TextToSpeechType speechType, out string fText)
         {
+            if(text == "") throw new NullReferenceException("Text is empty");
+
             fText = "";
 
             if (!Settings.readText) return;

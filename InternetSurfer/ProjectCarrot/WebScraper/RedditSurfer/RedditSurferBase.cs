@@ -201,6 +201,8 @@ namespace ProjectCarrot
 
                 if (includePauses)
                 {
+                    Debug.WriteLine($"pText {i}: {paragraphs[i].Text}");
+
                     bool addPause = i != paragraphs.Count - 1 && paragraphs[i].Text.Last() != '.';
 
                     string lPause = addPause ? AskRedditSurfer.linePause : "";
@@ -235,18 +237,6 @@ namespace ProjectCarrot
         public static void TakeScreenshot(IWebElement element, string name, int x)
         {
             Rectangle croppedImage = new Rectangle(element.Location.X - x / 2, element.Location.Y - x / 2, element.Size.Width + x, element.Size.Height + x);
-
-            /*string fullName = $"{name}.png";
-            string fileName = @$"{LocalPaths.filesPath}{fullName}";
-
-            byte[] byteArray = ((ITakesScreenshot)AskRedditSurfer.driver).GetScreenshot().AsByteArray;
-
-            Bitmap screenshot = new Bitmap(new MemoryStream(byteArray));
-
-            screenshot = screenshot.Clone(croppedImage, screenshot.PixelFormat);
-
-            screenshot.Save(String.Format(fileName, ImageFormat.Png));*/
-
             TakeScreenshotF(name, croppedImage);
         }
 
@@ -329,6 +319,18 @@ namespace ProjectCarrot
             }
 
             return driver;
+        }
+
+        public static string GetPostDescription()
+        {
+            string t = GetCommentText(Base.GetElement_X(AskRedditXPaths.postDescriptionParent_4), true);
+
+            if (t == "")
+            {
+                t  = GetCommentText(Base.GetElement_X(AskRedditXPaths.postDescriptionParent_5), true);
+            }
+
+            return t;
         }
     }
 }

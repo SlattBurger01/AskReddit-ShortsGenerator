@@ -73,7 +73,8 @@ namespace ProjectCarrot
 
         public static readonly string interestsTab = "/html/body/div[1]/div/div[2]/div[4]/div/div/div/header/div/div[2]/button";
 
-        public static readonly string postDescriptionParent = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[4]/div";
+        public static readonly string postDescriptionParent_4 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[4]/div";
+        public static readonly string postDescriptionParent_5 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[5]/div";
 
         public static readonly string postHeaderTextOnly = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[3]";
 

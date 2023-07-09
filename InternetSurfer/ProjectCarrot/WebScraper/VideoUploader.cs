@@ -177,37 +177,35 @@ namespace ProjectCarrot
 
             descriptionInput.Click();
 
-            Actions actions = new Actions(driver);
-            //actions.Click(descriptionInput).Perform();
+            Actions action = new Actions(driver);
 
-            for (int i = 0; i < 50; i++)
+            string vName = Base.GetElement_X("/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div/div/div/div/div/div/div/div/span/span").Text; // video input text
+
+            for (int i = 0; i < vName.Length + 2; i++)
             {
-                actions.SendKeys(descriptionInput, Keys.Backspace);
+                action.SendKeys(descriptionInput, Keys.Backspace);
                 Thread.Sleep(50);
             }
-
-            Thread.Sleep(1000);
+            action.Perform();
 
             string k = LocalFilesHandler.GetVideoName(y);
-            if(!string.IsNullOrEmpty(k)) actions.SendKeys($"{k} ");
-
-            actions.SendKeys(Keys.End);
+            if (!string.IsNullOrEmpty(k)) action.SendKeys(descriptionInput, $"{k} ").Perform();
 
             string[] tags = VideoData.tiktokTags;
             for (int i = 0; i < tags.Length; i++)
             {
-                actions.SendKeys(descriptionInput, $"#{tags[i]}").Perform();
+                action.SendKeys(descriptionInput, $"#{tags[i]}").Perform();
 
-                IWebElement element = Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
+                Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
                 Thread.Sleep(200);
 
-                actions.SendKeys(element, Keys.Enter).Perform();
+                action.SendKeys(Keys.Enter).Perform();
                 Thread.Sleep(500);
             }
 
             Base.ClickElement(TiktokPaths.uploadButton); // click post
 
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
 
             driver.Navigate().Refresh();
 

@@ -42,6 +42,13 @@ namespace ProjectCarrot
 
             rBase.OpenPost_(postId + 2, true);
 
+            // ---- ---- ALREADY OPENED ---- ----
+            string postText = rBase.GetPostDescription();
+
+            Debug.WriteLine($"postTextCount = {postText.Length}");
+
+            if (AskRedditSurfer.WordCountComment(TextUtils.GetWordCount(postText), postText)) return false;
+
             IWebElement header = Base.WaitForElement(AskRedditXPaths.postHeader);
 
             LocalFilesHandler.videoNames.Add(header.Text);
@@ -55,10 +62,6 @@ namespace ProjectCarrot
 
             rBase.TakeScreenshot(e2, FileNames.postName, 22, 47, l + 5, l + 10);
             TextReader.ReadText(header.Text, FileNames.postAudio, Settings.speechType, out _);
-
-            string postText = rBase.GetCommentText(Base.GetElement_X(AskRedditXPaths.postDescriptionParent), true);
-
-            if (AskRedditSurfer.WordCountComment(TextUtils.GetWordCount(postText), postText)) return false;
 
             TextReader.ReadText(postText, $"{FileNames.commentName}-{0}", Settings.speechType, out _);
             VideoEditor.AddCommentText(postText);
