@@ -76,6 +76,8 @@ namespace ProjectCarrot
         public static readonly string postDescriptionParent_4 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[4]/div";
         public static readonly string postDescriptionParent_5 = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[5]/div";
 
+        public static readonly string[] postDescriptionParentArray = new string[] { postDescriptionParent_4, postDescriptionParent_5 };
+
         public static readonly string postHeaderTextOnly = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[3]";
 
         public static readonly string postUserHeader = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[2]";
@@ -104,9 +106,11 @@ namespace ProjectCarrot
         private static readonly string darkMode_L = "/html/body/div[30]/div/div/div[4]/button";
 
         // comments
-        public static readonly string comments_4_L = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/div/div/div/div";
+        private static readonly string comments_4_L = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[4]/div/div/div/div";
         private static readonly string comments_5_L = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[5]/div/div/div/div";
         private static readonly string comments_6_L = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[6]/div/div/div/div";
+
+        public static readonly string[] commentsArray = new string[] { comments_4_L, comments_5_L, comments_6_L };
     }
 
     public static class YouTubeXPaths
@@ -152,6 +156,7 @@ namespace ProjectCarrot
         public static readonly string uploadButton = "/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[8]/div[2]/button";
 
         public static readonly string videoDescriptionInput = "/html/body/div[1]/div/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div[1]/div/div/div";
+        public static readonly string videoDescriptionText = "/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div/div/div/div/div/div/div/div/span/span";
     }
 
     public static class FileNames

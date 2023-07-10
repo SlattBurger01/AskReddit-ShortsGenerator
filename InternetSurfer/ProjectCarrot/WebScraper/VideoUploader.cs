@@ -152,8 +152,6 @@ namespace ProjectCarrot
         {
             NewTab("https://www.tiktok.com/upload");
 
-            //Thread.Sleep(5000);
-
             for (int i = 0; i < videos.Length; i++)
             {
                 driver.SwitchTo().Frame(0);
@@ -179,12 +177,11 @@ namespace ProjectCarrot
 
             Actions action = new Actions(driver);
 
-            string vName = Base.GetElement_X("/html/body/div[1]/div/div/div/div[2]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div/div/div/div/div/div/div/div/div/span/span").Text; // video input text
+            IWebElement vName = Base.GetElement_X(TiktokPaths.videoDescriptionText); // video input text
 
-            for (int i = 0; i < vName.Length + 2; i++)
+            for (int i = 0; i < vName.Text.Length + 2; i++)
             {
                 action.SendKeys(descriptionInput, Keys.Backspace);
-                Thread.Sleep(50);
             }
             action.Perform();
 
@@ -204,8 +201,6 @@ namespace ProjectCarrot
             }
 
             Base.ClickElement(TiktokPaths.uploadButton); // click post
-
-            //Thread.Sleep(1000);
 
             driver.Navigate().Refresh();
 

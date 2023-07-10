@@ -1,11 +1,9 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using ProjectCarrot.Text;
-using Selenium.Extensions;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing.Imaging;
-using System.Runtime.Intrinsics.Arm;
 using Base = ProjectCarrot.WebScraperBase;
 
 namespace ProjectCarrot
@@ -75,19 +73,7 @@ namespace ProjectCarrot
         /// <returns> found comments </returns>
         public static ReadOnlyCollection<IWebElement> GetComments(out string cPath)
         {
-            ReadOnlyCollection<IWebElement> comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_4);
-
-            if (comments.Count < 2) // at least 2 so another element can't be seen as comment
-            {
-                comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_5);
-
-                if (comments.Count < 2)
-                {
-                    comments = Base.GetElements_X(cPath = AskRedditXPaths.comments_6);
-                }
-            }
-
-            return comments;
+            return Base.GetElementsOnOneOfPaths(AskRedditXPaths.commentsArray, 2, out cPath);
         }
 
         /// <returns> If comments were loaded (25) or waited more than 4 secs, but found at least two (true), otherwise if comments were not (at least 2) loaded in 1 second or waited longer than 'Base' allows </returns>
@@ -98,8 +84,6 @@ namespace ProjectCarrot
             while (true)
             {
                 comments = GetComments(out cPath);
-
-                //Debug.WriteLine($"{comments.Count()} ({cPath})");
 
                 if (elapsedTime >= 4000 && comments.Count < 25) return comments.Count >= 2;
                 if (elapsedTime >= 1000 && comments.Count < 2) return false;

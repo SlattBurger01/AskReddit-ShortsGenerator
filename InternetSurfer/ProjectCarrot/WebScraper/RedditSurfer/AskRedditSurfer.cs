@@ -91,8 +91,6 @@ namespace ProjectCarrot
 
         private static void ReadAndScreenshotComments(out bool generateSubs)
         {
-            //Thread.Sleep(1000);
-
             if (!rBase.WaitForCommentsToLoad(out ReadOnlyCollection<IWebElement> comments, out string cPath))
             {
                 Debug.WriteLine($"Comments not found on {cPath}");

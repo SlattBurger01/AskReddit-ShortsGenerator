@@ -185,5 +185,20 @@ namespace ProjectCarrot
         {
             (driver as IJavaScriptExecutor).ExecuteScript("arguments[0].click();", element);
         }
+
+        public static ReadOnlyCollection<IWebElement> GetElementsOnOneOfPaths(string[] paths, int minLength, out string usedPath)
+        {
+            usedPath = "";
+            ReadOnlyCollection<IWebElement> array = new List<IWebElement>().AsReadOnly();
+
+            for (int i = 0; i < paths.Length; i++)
+            {
+                array = GetElements_X(usedPath = paths[i]);
+
+                if (array.Count >= minLength) return array;
+            }
+
+            return array;
+        }
     }
 }
