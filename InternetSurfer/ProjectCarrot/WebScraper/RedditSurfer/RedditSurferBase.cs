@@ -257,16 +257,30 @@ namespace ProjectCarrot
         /// <summary> Logins to reddit :) </summary>
         public static void LoginToReddit()
         {
-            if (!Base.TryClickElement(AskRedditXPaths.loginButton_old)) Base.ClickElement(AskRedditXPaths.loginButton_new);
+            bool shreddit = false;
 
-            Base.WaitForElement(AskRedditXPaths.loginIFrame);
+            if (!Base.TryClickElement(AskRedditXPaths.loginButton_old)) shreddit = true;
 
-            AskRedditSurfer.driver.SwitchTo().Frame(0);
+            if (shreddit)
+            {
+                Base.ClickElement(AskRedditXPaths.loginButton_new);
 
-            Base.SendKeysToElement(AskRedditXPaths.usernameInput, LogingData.userNameReddit);
-            Base.SendKeysToElement(AskRedditXPaths.passwordInput, LogingData.password);
+                Base.SendKeysToElement(AskRedditXPaths.usernameInput, LogingData.userNameReddit);
+                Base.SendKeysToElement(AskRedditXPaths.passwordInput, LogingData.password);
 
-            Base.ClickElement(AskRedditXPaths.finalLoginButton);
+                Base.ClickElement(AskRedditXPaths.finalLoginButton);
+            }
+            else
+            {
+                Base.WaitForElement(AskRedditXPaths.loginIFrame);
+
+                AskRedditSurfer.driver.SwitchTo().Frame(0);
+
+                Base.SendKeysToElement(AskRedditXPaths.usernameInput, LogingData.userNameReddit);
+                Base.SendKeysToElement(AskRedditXPaths.passwordInput, LogingData.password);
+
+                Base.ClickElement(AskRedditXPaths.finalLoginButton);
+            }
         }
 
         public static ChromeDriver SetupDriverForVideoGeneration()
@@ -307,7 +321,15 @@ namespace ProjectCarrot
 
         public static string GetPostDescription()
         {
-            string t = GetCommentText(Base.GetElement_X(AskRedditXPaths.postDescriptionParent_4), true);
+            // this element should exist in every post (in some of them it is just empty)
+            IWebElement? el = Base.WaitForElement(AskRedditXPaths.postDescriptionParent_4);
+
+            string t = "";
+
+            if (el != null)
+            {
+                if (el.Size.Height > 1) t = GetCommentText(el, true);
+            }
 
             if (t == "")
             {

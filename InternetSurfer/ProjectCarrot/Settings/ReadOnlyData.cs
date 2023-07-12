@@ -18,6 +18,8 @@ namespace ProjectCarrot
         public static readonly string agreeButton = "/html/body/section/div/div/div/div/div[1]/div[1]/form/div[1]/div[3]/div/label/div/ins";
         public static readonly string submitButton = "/html/body/section/div/div/div/div/div[1]/div[1]/form/div[3]/input";
 
+        public static readonly string ericVoiceButton = "/html/body/section[2]/div[2]/form/div[2]/div[1]/div[1]/div[2]/div/div[4]";
+
         public static readonly string downloadButton = "/html/body/section[2]/div[2]/form/div[2]/div[2]/div[1]/div[4]/div[2]/center[1]/div/a";
         public static readonly string textInput = "/html/body/section[2]/div[2]/form/div[1]/div[1]/div/textarea";
 
@@ -81,6 +83,8 @@ namespace ProjectCarrot
         public static readonly string postHeaderTextOnly = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[3]";
 
         public static readonly string postUserHeader = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[2]";
+
+        public static readonly string nsfwTagPost = "/html/body/div[1]/div/div[2]/div[3]/div/div/div/div[2]/div[1]/div[3]/div[1]/div/div[4]/div[2]";
 
         // --- NOT LOGGED IN ---
         private static readonly string posts_N = "/html/body/div[1]/div/div[2]/div[2]/div/div/div/div[2]/div[4]/div[1]/div[4]/div";

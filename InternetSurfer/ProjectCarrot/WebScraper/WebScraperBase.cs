@@ -35,8 +35,17 @@ namespace ProjectCarrot
         /// <summary> Clics element on xPath </summary>
         public static void ClickElement(string xPath) => GetElement_X(xPath).Click();
 
-        /// <returns> Element on 'xPath'</returns>
+        /// <returns> Element on 'xPath' </returns>
         public static IWebElement GetElement_X(string xPath) => driver.FindElement(By.XPath(xPath));
+
+        /// <returns> Collection of elements (if found), or empty one </returns>
+        public static ReadOnlyCollection<IWebElement> TryGetElements(string xPath)
+        {
+            try { return GetElements_X(xPath); }
+            catch { }
+
+            return new List<IWebElement>().AsReadOnly();
+        }
 
         /// <returns> Collection of elements of 'xPath' </returns>
         public static ReadOnlyCollection<IWebElement> GetElements_X(string xPath) => driver.FindElements(By.XPath(xPath));

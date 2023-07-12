@@ -19,9 +19,9 @@ namespace ProjectCarrot
             {
                 FileInfo info = new FileInfo(files[i]);
 
-                string name = RemoveType(info, out string type);
+                string fileName = RemoveType(info, out string type);
 
-                string newPath = @$"{targetFolder.FullName}\{name}{customIndex}{type}";
+                string newPath = @$"{targetFolder.FullName}\{fileName}{customIndex}{type}";
 
                 Debug.WriteLine($"Moving file {files[i]} to {newPath}");
 

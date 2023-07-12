@@ -27,13 +27,13 @@ namespace ProjectCarrot
         // for "Create and Upload" option
         public static readonly SessionSettings[] sessionsSettings01 = new SessionSettings[]
         {
-            new SessionSettings("p1", Video.PostAndComments(4, RedditUrls.askReddit), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
-            new SessionSettings("p2", Video.PostAndDescription(4, RedditUrls.askWomen), ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
+            new SessionSettings("p1", VideoTemplates.AskReddit(3), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            new SessionSettings("p2", VideoTemplates.AskWomen(3), ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
         };
 
         public static readonly SessionSettings[] sessionsSettings02 = new SessionSettings[]
         {
-            new SessionSettings("p1", Video.PostAndDescription(2, RedditUrls.trueOffMyChest), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            new SessionSettings("p1", VideoTemplates.TrueOffMyChest(2), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
             //new SessionSettings("p2", Video.PostAndDescription(4, RedditUrls.askWomen), ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
         };
 
@@ -47,7 +47,7 @@ namespace ProjectCarrot
         public static readonly int maxWordCountPerComment = int.MaxValue;
         public static readonly int minWordCountPerComment = 1;
 
-        public static readonly int maxCharsCountPerComment = 900;
+        public static readonly int maxCharsCountPerComment = 850;
 
         public static readonly int minCommentWordCount = 25; // if no comment like this was found: this option will be ignored
 
@@ -133,5 +133,14 @@ namespace ProjectCarrot
 
         public static Video PostAndComments(int c, string url) => new Video(c, url, VideoType.postAndComments);
         public static Video PostAndDescription(int c, string url) => new Video(c, url, VideoType.postAndDescription);
+    }
+
+    public static class VideoTemplates
+    {
+        public static Video AskReddit(int c) => Video.PostAndComments(c, RedditUrls.askReddit);
+        public static Video AskWomen(int c) => Video.PostAndComments(c, RedditUrls.askWomen);
+        public static Video AskMen(int c) => Video.PostAndComments(c, RedditUrls.askMen);
+
+        public static Video TrueOffMyChest(int c) => Video.PostAndDescription(c, RedditUrls.trueOffMyChest);
     }
 }

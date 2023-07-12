@@ -78,7 +78,7 @@ namespace ProjectCarrot
 
             if (Settings.loginToTtsFree) LoginToTtsFree();
 
-            Base.WaitAndClickElement("/html/body/section[2]/div[2]/form/div[2]/div[1]/div[1]/div[2]/div/div[4]"); // select target voice
+            Base.WaitAndClickElement(TtsfreeXPaths.ericVoiceButton, Base.maxUploadInterWaitTime); // loging in needs a longer wait time
 
             IWebElement speedSlider = Base.GetElement_X("/html/body/section[2]/div[2]/form/div[2]/div[1]/div[1]/span"); // Jake voice
 
