@@ -76,7 +76,7 @@ namespace ProjectCarrot
             driver.Navigate().Back();
             AudioFilesHandler.TryRenameAudioFiles();
 
-            VideoEditor.EditVideo(videoId, settings.sessionName, settings, true);
+            VideoEditor.EditVideo(videoId, settings.sessionName, settings, true, Settings.whisperSubs);
 
             return true;
         }

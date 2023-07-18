@@ -1,9 +1,13 @@
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
 import Utils
+import SubtitlesGeneratorUtils as sUtils
+import whisper
+import Paths
 
-def GetSubsArray(audio : AudioFileClip, text : str, start : float):
-    
+def GetSubsArray_c(audio : AudioFileClip, start : float, text : str) -> list[(float, float), str]:
+    """(start, end), text"""
+
     text = text.replace("?", ".")
     text = text.replace("!", ".")
 
@@ -19,16 +23,17 @@ def GetSubsArray(audio : AudioFileClip, text : str, start : float):
     for x in textArr:
         print(x)
 
-
     b = False # max was > than 0    
 
-    subs = []
+    subs : list = []
 
+    # previous subtitle end
     prev = start
 
-    i = 0
-
+    # count of silent chunks in a row
     count : int = 0
+
+    i = 0
 
     # This sets the previous subtitle (after the narrator stops speaking)
     for x in chunks:
@@ -51,7 +56,11 @@ def GetSubsArray(audio : AudioFileClip, text : str, start : float):
                         curArrPos += 1
 
                     print(f"Updating subs ({curArrPos}/{len(textArr)}) ({textArr[curArrPos]})")
-                    subs.append(((prev, value), textArr[curArrPos]))
+
+                    data = sUtils.GetSubtitleData(prev, value, textArr[curArrPos])
+                    #subs.append(((prev, value), textArr[curArrPos])) # add the last one
+                    subs.append(data)
+
                     prev = value
 
                     curArrPos += 1
@@ -63,34 +72,51 @@ def GetSubsArray(audio : AudioFileClip, text : str, start : float):
 
         i += 1
 
-    print(1)
+    data = sUtils.GetSubtitleData(prev, i * chunkDuration + start, textArr[curArrPos])
+    #subs.append(((prev, i * chunkDuration + start), textArr[curArrPos])) # add the last one
+    subs.append(data)
 
-    subs.append(((prev, i * chunkDuration + start), textArr[curArrPos])) # add the last one
+    return subs
 
-    print(2)
+audioPath = f'{Paths.tempFolder}/audio.mp3'
+
+def GetSubsArray_whisper(audio : AudioFileClip, start : float) -> list:    
+    """(start, end), text"""
+
+    audio = audio.subclip(start, audio.duration)
+
+    audio.write_audiofile(audioPath)
+
+    model = whisper.load_model('base')
+
+    result = model.transcribe(audioPath, task = 'translate')
+    
+    subs = []
+
+    for i in result['segments']:
+        data = sUtils.GetSubtitleData(float(i['start']) + start, float(i['end']) + start, i['text'])
+        subs.append(data)
+
+    os.remove(audioPath)
 
     return subs
 
 
-def GetSubtitles(audio : AudioFileClip, text : str, start : float):
-    subs = GetSubsArray(audio, text, start) # ((start, end), text)
+def GetSubtitles(audio : AudioFileClip, start : float, whisper : bool, text : str):
+    """If 'whisper' is enabled: 'text' is unnecessary"""
 
-    print("Got subs array sucessfuly")
+    if (whisper):
+        subs = GetSubsArray_whisper(audio, start)
+    else:
+        subs = GetSubsArray_c(audio, start, text) # ((start, end), text)
 
-    subtitles = SubtitlesClip(subs, GetSubtitlesGenerator())
+    subtitles = SubtitlesClip(subs, sUtils.GetSubtitlesGenerator())
     result = subtitles.set_position(('center')).set_duration(10)
 
     return result
 
-subtitlesWidth = 750
-fontS = 80
-strokeW = 4
-
-def GetSubtitlesGenerator() -> TextClip:
-    return lambda txt: TextClip(txt, font='Cooper-Black', fontsize = fontS, stroke_width = strokeW, stroke_color = "black", color='white', kerning=-2, interline=-1, size = (subtitlesWidth, 2000), method='caption')
-
-def StringIsEmpty(text : str) -> bool:
-    for x in text:
-        if(x != " " and x != "."):
-            return False
-    return True
+#def StringIsEmpty(text : str) -> bool:
+#    for x in text:
+#        if(x != " " and x != "."):
+#            return False
+#    return True

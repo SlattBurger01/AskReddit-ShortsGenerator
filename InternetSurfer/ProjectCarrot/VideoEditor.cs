@@ -52,11 +52,13 @@ namespace ProjectCarrot
         }
 
         /// <summary> Edits video based on downloaded files and moves / deletes them </summary>
-        public static void EditVideo(int videoIdentifier, string sessionName, SessionSettings settings, bool generateSubs)
+        public static void EditVideo(int videoIdentifier, string sessionName, SessionSettings settings, bool generateSubs, bool whisper)
         {
             string result = "";
 
-            if (Settings.renderVideo) result = CallVideoEditorPythonFile($"{sessionName}_{videoIdentifier} {generateSubs} \"{commentsText}\"");
+            if (whisper) commentsText = "";
+
+            if (Settings.renderVideo) result = CallVideoEditorPythonFile($"{sessionName}_{videoIdentifier} {generateSubs} {whisper} \"{commentsText}\"");
 
             Debug.WriteLine(result);
 

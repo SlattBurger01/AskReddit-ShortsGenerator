@@ -66,10 +66,20 @@ namespace ProjectCarrot
 
             IWebElement nameInput = Base.GetElement_X(YouTubeXPaths.videoNameInput);
 
+            int x = 0;
+
             while (nameInput.Text != string.Empty)
             {
                 Debug.WriteLine(nameInput.Text);
                 nameInput.SendKeys(Keys.Backspace);
+
+                x++;
+
+                if (x >= 10)
+                {
+                    nameInput.SendKeys(Keys.End);
+                    x = 0;
+                }
             }
 
             Debug.WriteLine(nameInput.Text);
@@ -191,6 +201,7 @@ namespace ProjectCarrot
             string[] tags = VideoData.tiktokTags;
             for (int i = 0; i < tags.Length; i++)
             {
+                action.SendKeys(descriptionInput, Keys.End); // remove if uploading is fcked up
                 action.SendKeys(descriptionInput, $"#{tags[i]}").Perform();
 
                 Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations

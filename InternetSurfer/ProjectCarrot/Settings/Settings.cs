@@ -22,7 +22,7 @@ namespace ProjectCarrot
         public static readonly Size browserSize = new Size(660, 1080);
 
         // for "Create" and "Upload" option
-        public static readonly SessionSettings defaultSettings = new SessionSettings("def", Video.PostAndComments(1, RedditUrls.askReddit), ChromePersons.person2, new UploadPlatforms(0, 1, 0));
+        public static readonly SessionSettings defaultSettings = new SessionSettings("def", Video.PostAndDescription(1, RedditUrls.trueOffMyChest), ChromePersons.person2, new UploadPlatforms(0, 1, 0));
 
         // for "Create and Upload" option
         public static readonly SessionSettings[] sessionsSettings01 = new SessionSettings[]
@@ -63,6 +63,9 @@ namespace ProjectCarrot
         public static readonly int minCharsForSingleComment = 360;
 
         public static readonly bool enableSubs = true; // even if subs are enabled, only images may be used (if there is comment that is not long enough)
+
+        // video editing
+        public static readonly bool whisperSubs = true;
 
         // debug optios
         public static readonly bool renderVideo = true;

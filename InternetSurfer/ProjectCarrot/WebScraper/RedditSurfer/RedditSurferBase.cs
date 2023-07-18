@@ -183,17 +183,19 @@ namespace ProjectCarrot
             {
                 string space = i != paragraphs.Count - 1 ? " " : "";
 
+                string pText = paragraphs[i].GetAttribute("textContent");
+
                 if (includePauses)
                 {
-                    Debug.WriteLine($"pText {i}: {paragraphs[i].Text}");
+                    Debug.WriteLine($"pText {i}: {paragraphs[i].Text}, {pText}");
 
-                    bool addPause = i != paragraphs.Count - 1 && paragraphs[i].Text.Last() != '.';
+                    bool addPause = i != paragraphs.Count - 1 && pText.Last() != '.';
 
                     string lPause = addPause ? AskRedditSurfer.linePause : "";
 
-                    t += $"{paragraphs[i].Text}{lPause}{space}";
+                    t += $"{pText}{lPause}{space}";
                 }
-                else t += $"{paragraphs[i].Text}{space}";
+                else t += $"{pText}{space}";
             }
 
             return TextUtils.RemoveHyperlinks(t);

@@ -10,15 +10,20 @@ from moviepy.video.tools.subtitles import SubtitlesClip
 try: # called via c# file
     videoIdentifier = sys.argv[1]  # at position 0 is file name
     enableSubsS = sys.argv[2]
-    videoText = sys.argv[3]
+    whisperSubsS = sys.argv[3]
+    videoText = sys.argv[4]
 except: # called via visual studio code
     videoIdentifier = "test_128"
     enableSubsS = "True"
+    whisperSubsS = "True"
     videoText = "I have passed two nude hikers in my 35 years of hiking. One male, one female, years and thousands of miles apart. Both said hello. I said hello. One mentioned the trail was washed out ahead but a second trail has been cut. I thanked them for the heads-up. Some people like the wind and sun on their skin. Both had on hiking boots. To each their own."
 
-enableSubs : bool = False
-if(enableSubsS == "True"):
-    enableSubs = True
+enableSubs : bool = enableSubsS == "True"
+whisperSubs : bool = whisperSubsS == "True"
+
+#enableSubs : bool = False
+#if(enableSubsS == "True"):
+#    enableSubs = True
 
 print(f"Calling python script id = ({videoIdentifier}), generating subs: {enableSubs}, with args: {sys.argv}")
 
@@ -80,7 +85,7 @@ def EditVideo(commentData : tuple[list, list]):
     finalAudioClip : CompositeAudioClip = CompositeAudioClip(finalAudios).set_fps(44100)
 
     if (enableSubs == True):
-        subtitles : SubtitlesClip = SubtitlesGenerator.GetSubtitles(finalAudioClip, videoText, a1.duration + pause)
+        subtitles : SubtitlesClip = SubtitlesGenerator.GetSubtitles(finalAudioClip, a1.duration + pause, whisperSubs, videoText)
         finalVideos.append(subtitles.set_duration(videoDuration))
 
         print("Logging subtitles: ")

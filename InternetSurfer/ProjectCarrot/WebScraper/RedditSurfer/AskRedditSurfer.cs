@@ -84,7 +84,7 @@ namespace ProjectCarrot
             driver.Navigate().Back();
             AudioFilesHandler.TryRenameAudioFiles();
 
-            VideoEditor.EditVideo(videoId, settings.sessionName, settings, generateSubs);
+            VideoEditor.EditVideo(videoId, settings.sessionName, settings, generateSubs, Settings.whisperSubs);
 
             return true;
         }
@@ -101,7 +101,7 @@ namespace ProjectCarrot
                 rBase.WaitForCommentsToLoad(out comments, out cPath);
             }
 
-            Debug.WriteLine($"Comments found on {cPath} (last: {comments.Last().Text})");
+            //Debug.WriteLine($"Comments found on {cPath} (last: {comments.Last().Text})");
 
             List<int> selectedComments = GetSuitableComments(comments, cPath, out generateSubs);
 
