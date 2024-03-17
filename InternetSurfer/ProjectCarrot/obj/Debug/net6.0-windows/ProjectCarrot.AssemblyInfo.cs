@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProjectCarrot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b743ac0922e5793ca8ab47b20442d43919012581")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProjectCarrot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProjectCarrot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -18,6 +18,7 @@ namespace ProjectCarrot
         public static void SetUp(string person)
         {
             ChromeOptions options = Base.GetDefaultOptions();
+
             driver = UndetectedChromeDriver.Instance(person, options);
             Base.driver = driver;
         }
@@ -201,7 +202,7 @@ namespace ProjectCarrot
             string[] tags = VideoData.tiktokTags;
             for (int i = 0; i < tags.Length; i++)
             {
-                action.SendKeys(descriptionInput, Keys.End); // remove if uploading is fcked up
+                action.SendKeys(descriptionInput, Keys.End).Perform(); // remove if uploading is fcked up
                 action.SendKeys(descriptionInput, $"#{tags[i]}").Perform();
 
                 Base.WaitForElement(TiktokPaths.hashtagRecomendation); // '#' recomendations
@@ -234,31 +235,23 @@ namespace ProjectCarrot
         {
             Base.ClickElement(InstagramPaths.uploadButton); // upload button
 
-            Thread.Sleep(1000);
+            Base.WaitAndSendKeysToElement(InstagramPaths.fileInput, video);
 
-            Base.SendKeysToElement(InstagramPaths.fileInput, video);
+            Base.WaitAndClickElement(InstagramPaths.videoRatioButton);
 
-            Thread.Sleep(2500);
+            Base.WaitAndClickElement(InstagramPaths.originaRationButton);
 
-            Base.ClickElement(InstagramPaths.videoRatioButton); // ratio
+            Base.ClickElement(InstagramPaths.nextButton);
 
-            Thread.Sleep(1000);
+            Thread.Sleep(1000); // keep wait time just for sure
 
-            Base.ClickElement(InstagramPaths.originaRationButton); // original
+            Base.ClickElement(InstagramPaths.nextButton);
 
-            Base.ClickElement("/html/body/div[2]/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div/div[1]/div/div/div[3]/div/div");
-
-            Thread.Sleep(1000);
-
-            Base.ClickElement("/html/body/div[2]/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div/div[1]/div/div/div[3]/div/div");
-
-            Thread.Sleep(1000);
-
-            IWebElement caption = Base.GetElement_X("/html/body/div[2]/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div/div[2]/div[2]/div/div/div/div[2]/div[1]/div");
+            IWebElement caption = Base.WaitForElement(InstagramPaths.captionInput);
             caption.Clear();
-            caption.SendKeys(VideoData.tiktokTagsInString);
+            caption.SendKeys(VideoData.instagramTagsInString);
 
-            Base.ClickElement("/html/body/div[2]/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div/div[1]/div/div/div[3]/div/div"); // share
+            Base.ClickElement(InstagramPaths.nextButton); // share
 
             while (true)
             {
@@ -304,9 +297,11 @@ namespace ProjectCarrot
     {
         public static readonly string[] youtubeTags = new string[] { "shorts", "askreddit", "reddit" };
         public static readonly string[] tiktokTags = new string[] { "fyp", "askreddit", "reddit" };
+        public static readonly string[] instagramTags = new string[] { "askreddit", "reddit" };
 
         public static readonly string youtubeTagsInString = ConnectTags(youtubeTags);
         public static readonly string tiktokTagsInString = ConnectTags(youtubeTags);
+        public static readonly string instagramTagsInString = ConnectTags(instagramTags);
 
         private static string ConnectTags(string[] tags)
         {

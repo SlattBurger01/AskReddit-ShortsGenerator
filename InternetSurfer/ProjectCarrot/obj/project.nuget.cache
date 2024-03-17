@@ -1,14 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "cYNaRfqy+xkdao557R97RHXJwVg68K2/AAx2DhRKLE3wbZyYCOsmfJqOZU3Y6f5QXXfz/GdmxTHuczpFz7xVxw==",
+  "dgSpecHash": "tAbiJVQmwK5MEm/fuWTnMdIFIcSmjvREGUjhPF30MEKdkHnj8fynFbBi7erzXO/tR+hekFpkQQ7WdwAqz2j1bw==",
   "success": true,
   "projectFilePath": "E:\\OtherProjects\\ProjectCarrot\\InternetSurfer\\ProjectCarrot\\ProjectCarrot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kocna\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.1\\microsoft.extensions.logging.abstractions.6.0.1.nupkg.sha512",
     "C:\\Users\\kocna\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\kocna\\.nuget\\packages\\selenium.support\\4.3.0\\selenium.support.4.3.0.nupkg.sha512",
-    "C:\\Users\\kocna\\.nuget\\packages\\selenium.webdriver\\4.10.0\\selenium.webdriver.4.10.0.nupkg.sha512",
-    "C:\\Users\\kocna\\.nuget\\packages\\selenium.webdriver.chromedriver\\113.0.5672.6300\\selenium.webdriver.chromedriver.113.0.5672.6300.nupkg.sha512",
+    "C:\\Users\\kocna\\.nuget\\packages\\selenium.webdriver\\4.11.0\\selenium.webdriver.4.11.0.nupkg.sha512",
+    "C:\\Users\\kocna\\.nuget\\packages\\selenium.webdriver.chromedriver\\116.0.5845.9600\\selenium.webdriver.chromedriver.116.0.5845.9600.nupkg.sha512",
     "C:\\Users\\kocna\\.nuget\\packages\\selenium.webdriver.undetectedchromedriver\\2.3.0\\selenium.webdriver.undetectedchromedriver.2.3.0.nupkg.sha512",
     "C:\\Users\\kocna\\.nuget\\packages\\sl.selenium.extensions\\2.1.1\\sl.selenium.extensions.2.1.1.nupkg.sha512",
     "C:\\Users\\kocna\\.nuget\\packages\\sl.selenium.extensions.chrome\\2.3.0\\sl.selenium.extensions.chrome.2.3.0.nupkg.sha512",

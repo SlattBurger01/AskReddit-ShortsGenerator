@@ -42,11 +42,11 @@
           "dependencies": {
             "Selenium.WebDriver": {
               "target": "Package",
-              "version": "[4.10.0, )"
+              "version": "[4.11.0, )"
             },
             "Selenium.WebDriver.ChromeDriver": {
               "target": "Package",
-              "version": "[113.0.5672.6300, )"
+              "version": "[116.0.5845.9600, )"
             },
             "Selenium.WebDriver.UndetectedChromeDriver": {
               "target": "Package",
@@ -72,7 +72,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

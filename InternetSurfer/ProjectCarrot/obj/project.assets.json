@@ -43,7 +43,7 @@
           "lib/net5.0/WebDriver.Support.dll": {}
         }
       },
-      "Selenium.WebDriver/4.10.0": {
+      "Selenium.WebDriver/4.11.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
@@ -58,7 +58,7 @@
           "buildTransitive/Selenium.WebDriver.targets": {}
         }
       },
-      "Selenium.WebDriver.ChromeDriver/113.0.5672.6300": {
+      "Selenium.WebDriver.ChromeDriver/116.0.5845.9600": {
         "type": "package",
         "build": {
           "build/Selenium.WebDriver.ChromeDriver.targets": {}
@@ -245,10 +245,10 @@
         "selenium.support.nuspec"
       ]
     },
-    "Selenium.WebDriver/4.10.0": {
-      "sha512": "MvgUaxeLqLOtRnNS+kHzqfOhLO+7ZEukhQMuS7ksQQPA2tGNXWhrRN3PTkTGuKhuodd9JkoZ4eCKVEQF6xPdmA==",
+    "Selenium.WebDriver/4.11.0": {
+      "sha512": "V8o+Nvi9/3Ix12ZzMGg+fI7sfu+HrflZkMGq8Orr+j0INbfpEEyM6KR9oaaHlm0WUXcn7dTYwyWrJxYsi6eniw==",
       "type": "package",
-      "path": "selenium.webdriver/4.10.0",
+      "path": "selenium.webdriver/4.11.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -266,26 +266,30 @@
         "manager/linux/selenium-manager",
         "manager/macos/selenium-manager",
         "manager/windows/selenium-manager.exe",
-        "selenium.webdriver.4.10.0.nupkg.sha512",
+        "selenium.webdriver.4.11.0.nupkg.sha512",
         "selenium.webdriver.nuspec"
       ]
     },
-    "Selenium.WebDriver.ChromeDriver/113.0.5672.6300": {
-      "sha512": "koLDjWwvv8fMyZhUu8ROFvaBnNcSc3FfyavEc+LKsk7AzfHEDA2xph7WwJGz3Y20mxH1zxW/q+EyKG6Z3cM7UQ==",
+    "Selenium.WebDriver.ChromeDriver/116.0.5845.9600": {
+      "sha512": "ip8MRM/uVZxn4leTky/Sa7+Yo648lPzeR98/JCtoknq9heUFw2wMUtxdg7VIeI6RisqVUZ6UyD9/+DgkExNLdg==",
       "type": "package",
-      "path": "selenium.webdriver.chromedriver/113.0.5672.6300",
+      "path": "selenium.webdriver.chromedriver/116.0.5845.9600",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
         "build/DefinePropertiesChromeDriver.targets",
         "build/Selenium.WebDriver.ChromeDriver.targets",
+        "driver/linux64/LICENSE.chromedriver",
         "driver/linux64/chromedriver",
+        "driver/mac64/LICENSE.chromedriver",
         "driver/mac64/chromedriver",
+        "driver/mac64arm/LICENSE.chromedriver",
         "driver/mac64arm/chromedriver",
+        "driver/win32/LICENSE.chromedriver",
         "driver/win32/chromedriver.exe",
         "nupkg-icon.png",
-        "selenium.webdriver.chromedriver.113.0.5672.6300.nupkg.sha512",
+        "selenium.webdriver.chromedriver.116.0.5845.9600.nupkg.sha512",
         "selenium.webdriver.chromedriver.nuspec"
       ]
     },
@@ -396,8 +400,8 @@
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
-      "Selenium.WebDriver >= 4.10.0",
-      "Selenium.WebDriver.ChromeDriver >= 113.0.5672.6300",
+      "Selenium.WebDriver >= 4.11.0",
+      "Selenium.WebDriver.ChromeDriver >= 116.0.5845.9600",
       "Selenium.WebDriver.UndetectedChromeDriver >= 2.3.0"
     ]
   },
@@ -442,11 +446,11 @@
         "dependencies": {
           "Selenium.WebDriver": {
             "target": "Package",
-            "version": "[4.10.0, )"
+            "version": "[4.11.0, )"
           },
           "Selenium.WebDriver.ChromeDriver": {
             "target": "Package",
-            "version": "[113.0.5672.6300, )"
+            "version": "[116.0.5845.9600, )"
           },
           "Selenium.WebDriver.UndetectedChromeDriver": {
             "target": "Package",
@@ -472,7 +476,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

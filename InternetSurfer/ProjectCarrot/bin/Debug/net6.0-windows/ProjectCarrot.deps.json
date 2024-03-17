@@ -8,9 +8,10 @@
     ".NETCoreApp,Version=v6.0": {
       "ProjectCarrot/1.0.0": {
         "dependencies": {
-          "Selenium.WebDriver": "4.10.0",
-          "Selenium.WebDriver.ChromeDriver": "113.0.5672.6300",
-          "Selenium.WebDriver.UndetectedChromeDriver": "2.3.0"
+          "Selenium.WebDriver": "4.11.0",
+          "Selenium.WebDriver.ChromeDriver": "115.0.5790.10200",
+          "Selenium.WebDriver.UndetectedChromeDriver": "2.3.0",
+          "Sl.Selenium.Extensions.Chrome": "2.3.0"
         },
         "runtime": {
           "ProjectCarrot.dll": {}
@@ -34,7 +35,7 @@
       },
       "Selenium.Support/4.3.0": {
         "dependencies": {
-          "Selenium.WebDriver": "4.10.0"
+          "Selenium.WebDriver": "4.11.0"
         },
         "runtime": {
           "lib/net5.0/WebDriver.Support.dll": {
@@ -43,7 +44,7 @@
           }
         }
       },
-      "Selenium.WebDriver/4.10.0": {
+      "Selenium.WebDriver/4.11.0": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.1"
         },
@@ -54,7 +55,7 @@
           }
         }
       },
-      "Selenium.WebDriver.ChromeDriver/113.0.5672.6300": {},
+      "Selenium.WebDriver.ChromeDriver/115.0.5790.10200": {},
       "Selenium.WebDriver.UndetectedChromeDriver/2.3.0": {
         "dependencies": {
           "Sl.Selenium.Extensions.Chrome": "2.3.0"
@@ -70,7 +71,7 @@
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.1",
           "Selenium.Support": "4.3.0",
-          "Selenium.WebDriver": "4.10.0",
+          "Selenium.WebDriver": "4.11.0",
           "System.Text.Encoding.CodePages": "6.0.0"
         },
         "runtime": {
@@ -126,19 +127,19 @@
       "path": "selenium.support/4.3.0",
       "hashPath": "selenium.support.4.3.0.nupkg.sha512"
     },
-    "Selenium.WebDriver/4.10.0": {
+    "Selenium.WebDriver/4.11.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-MvgUaxeLqLOtRnNS+kHzqfOhLO+7ZEukhQMuS7ksQQPA2tGNXWhrRN3PTkTGuKhuodd9JkoZ4eCKVEQF6xPdmA==",
-      "path": "selenium.webdriver/4.10.0",
-      "hashPath": "selenium.webdriver.4.10.0.nupkg.sha512"
+      "sha512": "sha512-V8o+Nvi9/3Ix12ZzMGg+fI7sfu+HrflZkMGq8Orr+j0INbfpEEyM6KR9oaaHlm0WUXcn7dTYwyWrJxYsi6eniw==",
+      "path": "selenium.webdriver/4.11.0",
+      "hashPath": "selenium.webdriver.4.11.0.nupkg.sha512"
     },
-    "Selenium.WebDriver.ChromeDriver/113.0.5672.6300": {
+    "Selenium.WebDriver.ChromeDriver/115.0.5790.10200": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-koLDjWwvv8fMyZhUu8ROFvaBnNcSc3FfyavEc+LKsk7AzfHEDA2xph7WwJGz3Y20mxH1zxW/q+EyKG6Z3cM7UQ==",
-      "path": "selenium.webdriver.chromedriver/113.0.5672.6300",
-      "hashPath": "selenium.webdriver.chromedriver.113.0.5672.6300.nupkg.sha512"
+      "sha512": "sha512-2YLCCJpAORYwtUxs/zKscVZiAY++Bb2Ze8eeFa22fjKiGHgvsUwotHUSoze7O72kPM8lzZTwTo0vOlX4HqrYrA==",
+      "path": "selenium.webdriver.chromedriver/115.0.5790.10200",
+      "hashPath": "selenium.webdriver.chromedriver.115.0.5790.10200.nupkg.sha512"
     },
     "Selenium.WebDriver.UndetectedChromeDriver/2.3.0": {
       "type": "package",

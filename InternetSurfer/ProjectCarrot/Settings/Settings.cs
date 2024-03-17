@@ -27,7 +27,7 @@ namespace ProjectCarrot
         // for "Create and Upload" option
         public static readonly SessionSettings[] sessionsSettings01 = new SessionSettings[]
         {
-            new SessionSettings("p1", VideoTemplates.AskReddit(3), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
+            new SessionSettings("p1", VideoTemplates.AskReddit(5), ChromePersons.person1, new UploadPlatforms(1, 1, 0)), // slatt
             new SessionSettings("p2", VideoTemplates.AskWomen(3), ChromePersons.person2, new UploadPlatforms(1, 1, 0)), // meme mania ( meme.mania270@gmail.com )
         };
 

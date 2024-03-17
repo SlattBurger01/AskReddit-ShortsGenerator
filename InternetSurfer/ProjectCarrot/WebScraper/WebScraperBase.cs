@@ -195,6 +195,24 @@ namespace ProjectCarrot
             (driver as IJavaScriptExecutor).ExecuteScript("arguments[0].click();", element);
         }
 
+        public static IWebElement? GetElementOnOneOfPaths(string[] paths, out string usedPath)
+        {
+            usedPath = "";
+
+            for (int i = 0; i < paths.Length; i++)
+            {
+                try
+                {
+                    return GetElement_X(usedPath = paths[i]);
+                }
+                catch { }               
+
+            }
+
+            return null;
+        }
+
+        /// <returns> Collection of found elements </returns>
         public static ReadOnlyCollection<IWebElement> GetElementsOnOneOfPaths(string[] paths, int minLength, out string usedPath)
         {
             usedPath = "";

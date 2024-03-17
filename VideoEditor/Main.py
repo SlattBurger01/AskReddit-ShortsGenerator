@@ -5,7 +5,7 @@ import sys
 import SubtitlesGenerator
 from moviepy.video.tools.subtitles import SubtitlesClip
 
-# args = 0: name, 1: videoId, 2: enable subtitles, 3: video text that is going to be used for subs
+# args = 0: name, 1: videoId, 2: enable subtitles, 3: whisper subs, 4: video text that is going to be used for subs
 
 try: # called via c# file
     videoIdentifier = sys.argv[1]  # at position 0 is file name
@@ -20,10 +20,6 @@ except: # called via visual studio code
 
 enableSubs : bool = enableSubsS == "True"
 whisperSubs : bool = whisperSubsS == "True"
-
-#enableSubs : bool = False
-#if(enableSubsS == "True"):
-#    enableSubs = True
 
 print(f"Calling python script id = ({videoIdentifier}), generating subs: {enableSubs}, with args: {sys.argv}")
 

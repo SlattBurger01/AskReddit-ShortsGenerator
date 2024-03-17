@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace ProjectCarrot
 {
@@ -35,9 +34,7 @@ namespace ProjectCarrot
         /// <summary> Test </summary>
         public static void Button4Click()
         {
-            string t = "How much longer do we have to listen to this obese idiot jerk himself off talking about his Bs anyhow?!?, The Call was abruptly ended. All follow ups ignored. Maybe a week or two later we got a letter terminating all current and developing licensing deals for cause citing contract violations and the company was effectively quietly banned from ever doing business with any brand under that massive mouse umbrella. That dude lost them hundreds of millions in future business in about 15 seconds. When you first start you’re told never to suggest pitching anything owned by the mouse and then get told the story.";
-
-            Debug.WriteLine(TextsManager.GetFixedText(t));
+            
         }
 
         public static void CreateAndUploadVideos(SessionSettings[] settingsGroup)

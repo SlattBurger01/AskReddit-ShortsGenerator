@@ -5,6 +5,8 @@ import SubtitlesGeneratorUtils as sUtils
 import whisper
 import Paths
 
+tempAudioPath = f'{Paths.tempFolder}/audio.mp3'
+
 def GetSubsArray_c(audio : AudioFileClip, start : float, text : str) -> list[(float, float), str]:
     """(start, end), text"""
 
@@ -78,18 +80,17 @@ def GetSubsArray_c(audio : AudioFileClip, start : float, text : str) -> list[(fl
 
     return subs
 
-audioPath = f'{Paths.tempFolder}/audio.mp3'
 
 def GetSubsArray_whisper(audio : AudioFileClip, start : float) -> list:    
     """(start, end), text"""
 
     audio = audio.subclip(start, audio.duration)
 
-    audio.write_audiofile(audioPath)
+    audio.write_audiofile(tempAudioPath)
 
     model = whisper.load_model('base')
 
-    result = model.transcribe(audioPath, task = 'translate')
+    result = model.transcribe(tempAudioPath, task = 'translate')
     
     subs = []
 
@@ -97,7 +98,7 @@ def GetSubsArray_whisper(audio : AudioFileClip, start : float) -> list:
         data = sUtils.GetSubtitleData(float(i['start']) + start, float(i['end']) + start, i['text'])
         subs.append(data)
 
-    os.remove(audioPath)
+    os.remove(tempAudioPath)
 
     return subs
 
@@ -114,9 +115,3 @@ def GetSubtitles(audio : AudioFileClip, start : float, whisper : bool, text : st
     result = subtitles.set_position(('center')).set_duration(10)
 
     return result
-
-#def StringIsEmpty(text : str) -> bool:
-#    for x in text:
-#        if(x != " " and x != "."):
-#            return False
-#    return True
